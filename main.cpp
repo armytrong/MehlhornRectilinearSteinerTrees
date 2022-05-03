@@ -9,5 +9,6 @@ int main() {
     DijkstraGraph dijkstra_graph(graph);
     dijkstra_graph.dijkstras_algorithm(0);
 
+    graph.print_graph(std::cout);
     return 0;
 }

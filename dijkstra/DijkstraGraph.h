@@ -12,15 +12,15 @@
 class DijkstraGraph {
 public:
     using NodeId = int;
-    using WeightVal = int;
+    using WeightType = int;
 
     struct Node {
         NodeId _id = -1;
         std::vector<NodeId> neighbours;
-        std::vector<WeightVal> weights;
+        std::vector<WeightType> weights;
         NodeId predecessor = -1;
         NodeId closest_terminal = -1;
-        WeightVal distance_to_root = -1;
+        WeightType distance_to_root = -1;
         bool included = false;
     };
 

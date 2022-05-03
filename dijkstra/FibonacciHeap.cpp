@@ -5,7 +5,10 @@
 #include <stack>
 #include <stdexcept>
 #include <cassert>
+#include <iostream>
 #include "FibonacciHeap.h"
+
+// I am aware that this is largely c-style code. If I find the time I am going to refactor this.
 
 FibonacciHeap::Node::Node(int item_id, int key) {
     parent = nullptr;
@@ -36,7 +39,7 @@ void FibonacciHeap::insert(int item_id, int key) {
     }
 }
 
-void FibonacciHeap::plant(Node *v) {
+void FibonacciHeap::plant(Node *v) { // NOLINT(misc-no-recursion)
     v->is_binomial = true;
 
     if (_roots.size() < v->childs.size() + 1) {
@@ -71,8 +74,13 @@ int FibonacciHeap::extract_min() {
     }
     for (size_t i = 0; i < _roots.size(); i++) {
         if (_roots[i] != nullptr) {
-            assert(_roots[i]->key >= 0 && _roots[i]->key <= 100);
-            assert(_roots[min_index]->key >= 0 && _roots[i]->key <= 100);
+
+            // These asserts are only sensible, if I find a notion of knowing the maximum possible index,
+            // istead of choosing an arbitrary (large) value i.e. 10000.
+
+            // assert(_roots[i]->key >= 0 && _roots[i]->key <= 10000);
+            // assert(_roots[min_index]->key >= 0 && _roots[i]->key <= 10000);
+
             if (_roots[i]->key < _roots[min_index]->key) {
                 min_index = i;
             }
@@ -87,7 +95,7 @@ int FibonacciHeap::extract_min() {
     return min_node->item_id;
 }
 
-int FibonacciHeap::find_min() const {
+[[maybe_unused]] int FibonacciHeap::find_min() const {
     int min_index = 0;
     for (size_t i = 0; i < _roots.size(); i++) {
         if (_roots[i] != nullptr && _roots[i]->key < _roots[min_index]->key) {

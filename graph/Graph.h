@@ -29,15 +29,10 @@ public:
 
     [[nodiscard]] std::vector<Edge> const &edges() const;
 
-    void print_graph(std::ostream outstream);
+    void print_graph(std::basic_ostream<char> &outstream);
 
 
 private:
-    void read_graph_from_file(std::istream &file);
-
-    void read_terminals_from_file(std::istream &file);
-
-
     NodeId _num_nodes;
     std::vector<NodeId> _terminals;
     std::vector<Edge> _edges;

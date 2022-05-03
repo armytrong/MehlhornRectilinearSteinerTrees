@@ -28,11 +28,11 @@ private:
 public:
     FibonacciHeap();
 
-    void insert(int item_it, int key);
+    void insert(int item_id, int key);
 
     int extract_min();
 
-    int find_min() const;
+    [[maybe_unused]] int find_min() const;
 
     void decrease_key(int item_id, int new_key);
 

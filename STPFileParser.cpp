@@ -61,7 +61,7 @@ Graph STPFileParser::create_graph() {
 bool STPFileParser::check_file_header(std::ifstream &file) {
     std::string line;
     std::getline(file, line); // read the first line of the file
-    // FIXME: wie kann ich hier eine Endlosschleife sicher vermeiden?
+    // TODO: wie kann ich hier eine Endlosschleife sicher vermeiden?
     while (line.empty() or !file.eof())      // find the first non-empty line
     {
         std::getline(file, line);
@@ -91,7 +91,7 @@ void STPFileParser::read_graph_from_file(std::istream &file) {
             if (val_1 < 1 or val_1 > _num_nodes or val_2 < 1 or val_2 > _num_nodes) {
                 throw std::invalid_argument("Invalid file foramt: Invalid edge.");
             }
-            // FIXME Hier sollte man auch gegen values die trotzdem 0 sind guarden
+            // TODO Hier sollte man auch gegen values die trotzdem 0 sind guarden
             // subtract 1 from node_id, this program is 0-based
             _edges.emplace_back(val_1 - 1, val_2 - 1, val_3);
         }

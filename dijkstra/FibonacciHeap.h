@@ -9,7 +9,7 @@
 #include <list>
 #include <vector>
 
-class FibonacciHeap {
+class [[maybe_unused]] FibonacciHeap {
 private:
     struct Node {
         Node(int item_id, int key);
@@ -28,15 +28,15 @@ private:
 public:
     FibonacciHeap();
 
-    void insert(int item_id, int key);
+    [[maybe_unused]] void insert(int item_id, int key);
 
-    int extract_min();
+    [[maybe_unused]] int extract_min();
 
-    [[maybe_unused]] int find_min() const;
+    [[maybe_unused]] [[nodiscard]] int find_min() const;
 
-    void decrease_key(int item_id, int new_key);
+    [[maybe_unused]] void decrease_key(int item_id, int new_key);
 
-    bool empty() const;
+    [[maybe_unused]] [[nodiscard]] bool empty() const;
 
     ~FibonacciHeap();
 

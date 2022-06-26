@@ -5,7 +5,6 @@
 #include <stack>
 #include <stdexcept>
 #include <cassert>
-#include <iostream>
 #include "FibonacciHeap.h"
 
 // I am aware that this is largely c-style code. If I find the time I am going to refactor this.
@@ -95,7 +94,7 @@ int FibonacciHeap::extract_min() {
     return min_node->item_id;
 }
 
-[[maybe_unused]] int FibonacciHeap::find_min() const {
+int FibonacciHeap::find_min() const {
     int min_index = 0;
     for (size_t i = 0; i < _roots.size(); i++) {
         if (_roots[i] != nullptr && _roots[i]->key < _roots[min_index]->key) {

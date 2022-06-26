@@ -41,7 +41,8 @@ void DijkstraGraph::dijkstras_algorithm(NodeId root_node_id) {
         node.included = false;
     }
 
-    FibonacciHeap candidates;
+    StandardHeap candidates;
+//    FibonacciHeap candidates;
 
     candidates.insert(root_node_id, 0);
     root_node.distance_to_root = 0;

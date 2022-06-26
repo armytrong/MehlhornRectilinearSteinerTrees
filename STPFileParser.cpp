@@ -5,6 +5,7 @@
 #include <fstream>
 #include <utility>
 #include <sstream>
+#include <cmath>
 #include "STPFileParser.h"
 
 constexpr char FILE_HEADER[] = "33D32945 STP File, STP Format Version 1.0";
@@ -55,19 +56,7 @@ STPFileParser::STPFileParser(std::string filename) : _filename(std::move(filenam
 }
 
 Graph STPFileParser::create_graph() {
-    return Graph(_num_nodes, _terminals, _edges);
-}
-
-bool STPFileParser::check_file_header(std::ifstream &file) {
-    std::string line;
-    std::getline(file, line); // read the first line of the file
-    // TODO: wie kann ich hier eine Endlosschleife sicher vermeiden?
-    while (line.empty() or !file.eof())      // find the first non-empty line
-    {
-        std::getline(file, line);
-    }
-    // check for valid file header
-    return !(line == FILE_HEADER);
+    return {_num_nodes, _terminals, _edges};
 }
 
 void STPFileParser::read_graph_from_file(std::istream &file) {
@@ -137,3 +126,5 @@ std::ifstream STPFileParser::open_input_file() const {
     //check_file_header(file);
     return file;
 }
+
+

@@ -16,7 +16,6 @@ public:
     Graph create_graph();
 
 private:
-    static bool check_file_header(std::ifstream &file);
 
     [[nodiscard]] std::ifstream open_input_file() const;
 
@@ -25,8 +24,8 @@ private:
     void read_terminals_from_file(std::istream &file);
 
     std::string _filename;
-    Graph::NodeId _num_nodes;
-    std::vector<Graph::NodeId> _terminals;
+    NodeId _num_nodes;
+    std::vector<NodeId> _terminals;
     std::vector<Graph::Edge> _edges;
 };
 

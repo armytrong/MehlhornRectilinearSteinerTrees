@@ -8,7 +8,7 @@
 
 #include <string>
 
-class SteinerTreeApproximator {
+class [[maybe_unused]] SteinerTreeApproximator {
 public:
     explicit SteinerTreeApproximator(std::string filename);
 

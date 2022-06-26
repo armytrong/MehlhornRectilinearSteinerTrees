@@ -14,4 +14,13 @@ add_executable(
         graph/Graph.cpp graph/Graph.h
         dijkstra/FibonacciHeap.cpp
         dijkstra/FibonacciHeap.h
+        typedefs.h
+        DelaunayGraphFactory.cpp
+        DelaunayGraphFactory.h
+        kruskal/kruskal_ind.cpp
+        kruskal/kruskal_ind.h
+        dijkstra/StandardHeap.cpp
+        dijkstra/StandardHeap.h
+        graph/RectilinearGraph.cpp
+        graph/RectilinearGraph.h
 )

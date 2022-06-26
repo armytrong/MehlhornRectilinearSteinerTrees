@@ -7,29 +7,37 @@
 
 #include <vector>
 #include <istream>
+#include "../typedefs.h"
 
 class Graph {
 public:
-    using EdgeId = size_t;
-    using NodeId = size_t;
 
     struct Edge {
-        Edge(NodeId node_a, NodeId node_b, int weight);
+        Edge(NodeId head, NodeId tail, int weight);
 
-        bool operator<(const Edge &other) const;
+        bool operator<(Edge const &other) const;
 
         NodeId _head;
         NodeId _tail;
         int _weight;
     };
 
+    explicit Graph(NodeId num_nodes) : _num_nodes(num_nodes) {}
+
+    Graph(NodeId num_nodes, std::vector<NodeId> terminals) : _num_nodes(num_nodes), _terminals(std::move(terminals)) {}
+
     Graph(NodeId num_nodes, std::vector<NodeId> terminals, std::vector<Edge> edges);
 
-    [[nodiscard]] NodeId num_nodes() const;
+    [[nodiscard]] NodeId virtual num_nodes() const;
+    [[nodiscard]] EdgeId num_edges() const;
 
     [[nodiscard]] std::vector<Edge> const &edges() const;
 
+    [[nodiscard]] std::vector<NodeId> const &terminals() const;
+
     void print_graph(std::basic_ostream<char> &outstream);
+
+    void add_edge(Edge const &new_edge);
 
 
 private:

@@ -2,13 +2,16 @@
 // Created by jgier on 29.04.2022.
 //
 
-#include <numeric>
 #include <ranges>
+#include <utility>
 #include "DijkstraGraph.h"
 #include "FibonacciHeap.h"
+#include "StandardHeap.h"
+#include <map>
+#include <cassert>
 
 
-DijkstraGraph::DijkstraGraph(Graph const &graph) {
+DijkstraGraph::DijkstraGraph(Graph const &graph) : _calculation_finished(false) {
     _nodes = std::vector<Node>(graph.num_nodes());
     for (size_t i = 0; i < _nodes.size(); i++) {
         _nodes[i]._id = static_cast<NodeId>(i);
@@ -23,10 +26,13 @@ DijkstraGraph::DijkstraGraph(Graph const &graph) {
     }
 }
 
+const DijkstraGraph::Node &DijkstraGraph::operator[](NodeId index) const {
+    return _nodes[index];
+}
 
 void DijkstraGraph::dijkstras_algorithm(NodeId root_node_id) {
 
-    auto id_to_node_projection = [this](auto const node_id) { return _nodes[node_id]; };
+    // auto id_to_node_projection = [this](auto const node_id) { return _nodes[node_id]; };
 
     if (root_node_id >= _nodes.size()) {
         throw std::invalid_argument("Root node not in graph.");
@@ -45,20 +51,22 @@ void DijkstraGraph::dijkstras_algorithm(NodeId root_node_id) {
 //    FibonacciHeap candidates;
 
     candidates.insert(root_node_id, 0);
+
     root_node.distance_to_root = 0;
 
     while (!candidates.empty()) {
         NodeId node_v_id = candidates.extract_min();
-        //std::cout << "adding node_v " << node_v_id << std::endl; // DEBUG
         Node &node_v = _nodes[node_v_id];
         node_v.included = true;
 
         // for (auto const& node_w : node_v.neighbours | std::views::transform(id_to_node_projection))
         // Fände ich auch schöner so, aber CLion beschwert sich da irgendwie. Vielleicht habe ich da was falsch
         // konfiguriert.
-        for (auto const node_w_id: node_v.neighbours) {
+        for (size_t i = 0; i < node_v.neighbours.size(); i++) {
+            auto const node_w_id = node_v.neighbours[i];
+            auto const edge_weight = node_v.weights[i];
+
             Node &node_w = _nodes[node_w_id];
-            WeightType edge_weight = node_v.weights[node_w_id];
 
             if (node_w.distance_to_root == -1) {
 
@@ -100,12 +108,40 @@ void DijkstraGraph::dijkstras_algorithm(NodeId root_node_id) {
                 else {
                     node_w.closest_terminal = node_v.closest_terminal;
                 }
-
             }
-
         }
+    }
+    _calculation_finished = true;
+}
 
+[[maybe_unused]] Graph DijkstraGraph::generate_output_graph() {
+    std::vector<Graph::Edge> edges;
+    std::vector<NodeId> terminals;
+
+    for (auto const &node: _nodes) {
+        if (node.predecessor != -1) {
+            WeightType edge_weight = node.distance_to_root - _nodes[node.predecessor].distance_to_root;
+            edges.emplace_back(static_cast<NodeId>(node._id), static_cast<NodeId>(node.predecessor),
+                               edge_weight);
+        }
     }
 
-
+    return {static_cast<NodeId>(_nodes.size()), terminals, edges};
 }
+
+DijkstraGraph::Node &DijkstraGraph::operator[](NodeId index) {
+    return _nodes[index];
+}
+
+NodeId DijkstraGraph::add_node(std::vector<NodeId> neighbours, std::vector<WeightType> weights) {
+    auto id = static_cast<NodeId>(_nodes.size());
+    _nodes.push_back({id, std::move(neighbours), std::move(weights)});
+    _calculation_finished = false;
+    return id;
+}
+
+bool DijkstraGraph::calculation_finished() const { return _calculation_finished; }
+
+
+
+

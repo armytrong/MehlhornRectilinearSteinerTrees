@@ -7,8 +7,6 @@
 #include <cassert>
 #include "FibonacciHeap.h"
 
-// I am aware that this is largely c-style code. If I find the time I am going to refactor this.
-
 FibonacciHeap::Node::Node(int item_id, int key) {
     parent = nullptr;
     is_binomial = true;
@@ -71,7 +69,7 @@ int FibonacciHeap::extract_min() {
             throw std::out_of_range("Heap is empty.");
         }
     }
-    for (size_t i = 0; i < _roots.size(); i++) {
+    for (int i = 0; i < _roots.size(); i++) {
         if (_roots[i] != nullptr) {
 
             // These asserts are only sensible, if I find a notion of knowing the maximum possible index,
@@ -96,7 +94,7 @@ int FibonacciHeap::extract_min() {
 
 int FibonacciHeap::find_min() const {
     int min_index = 0;
-    for (size_t i = 0; i < _roots.size(); i++) {
+    for (int i = 0; i < _roots.size(); i++) {
         if (_roots[i] != nullptr && _roots[i]->key < _roots[min_index]->key) {
             min_index = i;
         }
@@ -131,11 +129,10 @@ void FibonacciHeap::decrease_key(int item_id, int new_key) {
 }
 
 bool FibonacciHeap::empty() const {
-    for (Node *n: _roots) {
-        if (n != nullptr)
-            return false;
+    if (std::all_of(_roots.begin(), _roots.end(), [](Node *n) { return n == nullptr; })) {
+        return true;
     }
-    return true;
+    return false;
 }
 
 FibonacciHeap::~FibonacciHeap() {

@@ -7,12 +7,11 @@
 
 #include <iostream>
 #include <vector>
+#include "../typedefs.h"
 #include "../graph/Graph.h"
 
 class DijkstraGraph {
 public:
-    using NodeId = int;
-    using WeightType = int;
 
     struct Node {
         NodeId _id = -1;
@@ -24,16 +23,25 @@ public:
         bool included = false;
     };
 
+    // TODO: make DijkstraGraph mutable
+
     explicit DijkstraGraph(Graph const &graph);
 
-    Node &operator[](NodeId index) {
-        return _nodes[index];
-    }
+    Node &operator[](NodeId index);
+
+    Node const &operator[](NodeId index) const;
 
     void dijkstras_algorithm(NodeId root_node_id);
 
+    NodeId add_node(std::vector<NodeId> neighbours, std::vector<WeightType> weights);
+
+    [[maybe_unused]] Graph generate_output_graph();
+
+    [[nodiscard]] bool calculation_finished() const;
+
 private:
     std::vector<Node> _nodes;
+    bool _calculation_finished;
 };
 
 

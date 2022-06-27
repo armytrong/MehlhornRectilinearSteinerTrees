@@ -19,7 +19,7 @@ public:
 
     [[nodiscard]] virtual bool empty() const = 0;
 
-    virtual ~Heap() = 0;
+    virtual ~Heap() = default;
 };
 
 

@@ -23,8 +23,13 @@ private:
 
     void read_terminals_from_file(std::istream &file);
 
+    void read_coordinates_from_file(std::istream &file);
+
+    static void remove_carriage_return(std::string &s);
+
     std::string _filename;
     NodeId _num_nodes;
+    NodeId _num_terminals;
     std::vector<NodeId> _terminals;
     std::vector<Graph::Edge> _edges;
 };

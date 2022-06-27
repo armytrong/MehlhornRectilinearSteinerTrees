@@ -8,8 +8,9 @@
 
 #include <list>
 #include <vector>
+#include "Heap.h"
 
-class [[maybe_unused]] FibonacciHeap {
+class [[maybe_unused]] FibonacciHeap : public Heap {
 private:
     struct Node {
         Node(int item_id, int key);
@@ -28,17 +29,17 @@ private:
 public:
     FibonacciHeap();
 
-    [[maybe_unused]] void insert(int item_id, int key);
+    [[maybe_unused]] void insert(int item_id, int key) override;
 
-    [[maybe_unused]] int extract_min();
+    [[maybe_unused]] int extract_min() override;
 
     [[maybe_unused]] [[nodiscard]] int find_min() const;
 
-    [[maybe_unused]] void decrease_key(int item_id, int new_key);
+    [[maybe_unused]] void decrease_key(int item_id, int new_key) override;
 
-    [[maybe_unused]] [[nodiscard]] bool empty() const;
+    [[maybe_unused]] [[nodiscard]] bool empty() const override;
 
-    ~FibonacciHeap();
+    ~FibonacciHeap() override;
 
 private:
     std::vector<Node *> _roots;

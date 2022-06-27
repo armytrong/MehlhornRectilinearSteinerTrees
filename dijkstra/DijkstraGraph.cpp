@@ -47,8 +47,12 @@ void DijkstraGraph::dijkstras_algorithm(NodeId root_node_id) {
         node.included = false;
     }
 
-    StandardHeap candidates;
+    StandardHeap candidates = StandardHeap{};
 //    FibonacciHeap candidates;
+    Heap &candidates_2 = candidates;
+    Heap *candidates_3 = new StandardHeap{};
+
+    delete candidates_3;
 
     candidates.insert(root_node_id, 0);
 

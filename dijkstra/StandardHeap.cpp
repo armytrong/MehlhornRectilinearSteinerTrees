@@ -30,6 +30,8 @@ bool StandardHeap::empty() const {
     return _heap.empty();
 }
 
+StandardHeap::~StandardHeap() = default;
+
 bool StandardHeap::Node::operator<(const StandardHeap::Node &other) const {
     return other.key < key;
 }

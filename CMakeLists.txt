@@ -23,4 +23,4 @@ add_executable(
         dijkstra/StandardHeap.h
         graph/RectilinearGraph.cpp
         graph/RectilinearGraph.h
-)
+        dijkstra/BinaryHeap.cpp dijkstra/BinaryHeap.h dijkstra/Heap.h)

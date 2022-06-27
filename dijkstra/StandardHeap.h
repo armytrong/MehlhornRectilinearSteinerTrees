@@ -7,8 +7,9 @@
 
 
 #include <vector>
+#include "Heap.h"
 
-class StandardHeap {
+class StandardHeap : public Heap {
 private:
     struct Node {
         int item_id, key;
@@ -16,10 +17,12 @@ private:
     };
 
 public:
-    void insert(int item_id, int key);
-    int extract_min();
-    void decrease_key(int item_id, int new_key);
-    [[nodiscard]] bool empty() const;
+    ~StandardHeap() override;
+public:
+    void insert(int item_id, int key) override;
+    int extract_min() override;
+    void decrease_key(int item_id, int new_key) override;
+    [[nodiscard]] bool empty() const override;
 private:
     std::vector<Node> _heap;
 };

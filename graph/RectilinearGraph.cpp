@@ -3,6 +3,8 @@
 //
 
 #include "RectilinearGraph.h"
+#include <iostream>
+#include <fstream>
 
 RectilinearGraph::RectilinearGraph(NodeId num_nodes) {
     auto const sqrt = static_cast<NodeId>(std::sqrt(num_nodes));
@@ -96,3 +98,46 @@ Graph RectilinearGraph::create_graph() const {
     return result;
 }
 
+void RectilinearGraph::print_as_postscript(std::ostream &os, const std::string &base_file_name) {
+    std::ifstream base_file(base_file_name);
+    assert(base_file);
+    std::string line;
+
+    os << base_file.rdbuf();
+    base_file.close();
+
+    os << std::endl;
+    os << "%%BeginSetup" << std::endl << std::endl;
+    os << 0 << " " << _grid_width + 1 << " " << 0 << " " << _grid_width + 1 << " SetAxes" << std::endl << std::endl;
+
+    os << _terminals.size() << " DefineTerminals" << std::endl;
+    for (auto terminal_id: _terminals) {
+        os << "\t" << x_coord(terminal_id) << "\t" << y_coord(terminal_id) << "\tDT" << std::endl;
+    }
+
+    os << std::endl << "%%EndSetup" << std::endl << std::endl;
+
+    os << "%%Page: 1 1" << std::endl;
+    os << "BeginPlot" << std::endl;
+    os << "\tPlot_Terminals" << std::endl;
+    for (int i = 0; i < num_nodes(); i++) {
+        if (_vertical_edges_above_node[i]) {
+            os << "\t" << x_coord(i) << "\t" << y_coord(i) << "\t" << x_coord(i) << "\t" << y_coord(i) + 1 << "\tS"
+               << std::endl;
+        }
+        if (_horizontal_edges_after_node[i]) {
+            os << "\t" << x_coord(i) << "\t" << y_coord(i) << "\t" << x_coord(i) + 1 << "\t" << y_coord(i) << "\tS"
+               << std::endl;
+        }
+    }
+    os << "  (Steiner Minimal Tree: " << _terminals.size() << "points, length=" << num_edges() << ")" << std::endl;
+    os << "EndPlot" << std::endl;
+}
+
+int RectilinearGraph::x_coord(NodeId node) const {
+    return node % _grid_width + 1;
+}
+
+int RectilinearGraph::y_coord(NodeId node) const {
+    return static_cast<int>(node / _grid_width) + 1;
+}

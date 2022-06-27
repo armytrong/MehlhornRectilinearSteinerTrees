@@ -24,7 +24,20 @@ public:
 
     void add_any_edge(NodeId node_a, NodeId node_b, bool flipped = true);
 
+    int num_edges() {
+        int ret = 0;
+        for (auto b: _horizontal_edges_after_node) {
+            if (b) ret += 1;
+        }
+        for (auto b: _vertical_edges_above_node) {
+            if (b) ret += 1;
+        }
+        return ret;
+    }
+
     [[nodiscard]] Graph create_graph() const;
+
+    void print_as_postscript(std::ostream &os, const std::string &base_file_name);
 
 private:
     NodeId _grid_width;
@@ -41,6 +54,10 @@ private:
     [[nodiscard]] bool validate_node(NodeId node) const;
 
     static void swap_if_a_larger(NodeId &node_a, NodeId &node_b);
+
+    int x_coord(NodeId node) const;
+
+    int y_coord(NodeId node) const;
 };
 
 

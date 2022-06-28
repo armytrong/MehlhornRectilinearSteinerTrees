@@ -8,12 +8,14 @@
 
 #include <string>
 #include "graph/Graph.h"
+#include "delaunay/DelaunayGraph.h"
 
 class STPFileParser {
 public:
     explicit STPFileParser(std::string filename);
 
     Graph create_graph();
+    DelaunayGraph create_delaunay_graph();
 
 private:
 

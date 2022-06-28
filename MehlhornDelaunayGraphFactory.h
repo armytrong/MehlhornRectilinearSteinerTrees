@@ -2,14 +2,14 @@
 // Created by jgier on 20.06.2022.
 //
 
-#ifndef HAUPTAUFGABE_2_DELAUNAYGRAPHFACTORY_H
-#define HAUPTAUFGABE_2_DELAUNAYGRAPHFACTORY_H
+#ifndef HAUPTAUFGABE_2_MEHLHORNDELAUNAYGRAPHFACTORY_H
+#define HAUPTAUFGABE_2_MEHLHORNDELAUNAYGRAPHFACTORY_H
 
 
 #include "graph/Graph.h"
 #include "dijkstra/DijkstraGraph.h"
 
-class DelaunayGraphFactory {
+class MehlhornDelaunayGraphFactory {
 public:
 
 
@@ -36,4 +36,4 @@ private:
 };
 
 
-#endif //HAUPTAUFGABE_2_DELAUNAYGRAPHFACTORY_H
+#endif //HAUPTAUFGABE_2_MEHLHORNDELAUNAYGRAPHFACTORY_H

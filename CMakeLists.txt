@@ -3,8 +3,7 @@ project(Hauptaufgabe_2)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(
-        Hauptaufgabe_2
+add_executable(Hauptaufgabe_2
         main.cpp
         SteinerTreeApproximator.cpp
         SteinerTreeApproximator.h
@@ -12,15 +11,18 @@ add_executable(
         dijkstra/DijkstraGraph.cpp
         dijkstra/DijkstraGraph.h
         graph/Graph.cpp graph/Graph.h
-        dijkstra/FibonacciHeap.cpp
-        dijkstra/FibonacciHeap.h
+        heap/FibonacciHeap.cpp
+        heap/FibonacciHeap.h
         typedefs.h
-        DelaunayGraphFactory.cpp
-        DelaunayGraphFactory.h
+        MehlhornDelaunayGraphFactory.cpp
+        MehlhornDelaunayGraphFactory.h
         kruskal/kruskal_ind.cpp
         kruskal/kruskal_ind.h
-        dijkstra/StandardHeap.cpp
-        dijkstra/StandardHeap.h
+        heap/StandardHeap.cpp
+        heap/StandardHeap.h
         graph/RectilinearGraph.cpp
         graph/RectilinearGraph.h
-        dijkstra/BinaryHeap.cpp dijkstra/BinaryHeap.h dijkstra/Heap.h)
+        heap/BinaryHeap.cpp heap/BinaryHeap.h heap/Heap.h googletest/MainTest.cpp delaunay/DelaunayGraph.cpp delaunay/DelaunayGraph.h delaunay/DelaunaySet.cpp delaunay/DelaunaySet.h delaunay/DelaunayPriorityQueue.cpp delaunay/DelaunayPriorityQueue.h)
+
+
+add_subdirectory(googletest)

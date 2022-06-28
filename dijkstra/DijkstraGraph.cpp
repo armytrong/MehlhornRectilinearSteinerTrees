@@ -5,8 +5,8 @@
 #include <ranges>
 #include <utility>
 #include "DijkstraGraph.h"
-#include "FibonacciHeap.h"
-#include "StandardHeap.h"
+#include "../heap/FibonacciHeap.h"
+#include "../heap/StandardHeap.h"
 #include <map>
 #include <cassert>
 

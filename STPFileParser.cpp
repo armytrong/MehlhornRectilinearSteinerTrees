@@ -6,6 +6,7 @@
 #include <utility>
 #include <sstream>
 #include <cmath>
+#include <cassert>
 #include "STPFileParser.h"
 
 constexpr char FILE_HEADER[] = "33D32945 STP File, STP Format Version 1.0";
@@ -162,6 +163,16 @@ void STPFileParser::remove_carriage_return(std::string &s) {
     while (s[s.size() - 1] == '\r') {
         s = s.erase(s.size() - 1);
     }
+}
+
+DelaunayGraph STPFileParser::create_delaunay_graph() {
+    DelaunayGraph delaunay_graph;
+    auto sqrt = static_cast<GridUnit>(std::sqrt(_num_nodes));
+    assert(sqrt * sqrt == _num_nodes);
+    for (auto terminal_id: _terminals) {
+        delaunay_graph.add_terminal(terminal_id % sqrt, static_cast<GridUnit>(terminal_id / sqrt), terminal_id);
+    }
+    return delaunay_graph;
 }
 
 

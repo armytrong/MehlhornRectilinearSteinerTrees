@@ -9,6 +9,7 @@
 
 using NodeId = int;
 using EdgeId = int;
+using GridUnit = int;
 using WeightType = int;
 
 

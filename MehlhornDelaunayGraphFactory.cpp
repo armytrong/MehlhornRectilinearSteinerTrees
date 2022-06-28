@@ -4,12 +4,12 @@
 
 #include <cassert>
 #include <optional>
-#include "DelaunayGraphFactory.h"
+#include "MehlhornDelaunayGraphFactory.h"
 
 void
-DelaunayGraphFactory::bucket_sort(
+MehlhornDelaunayGraphFactory::bucket_sort(
         std::vector<CandidateEdge> &vector,
-        DelaunayGraphFactory::TypeToNodeId<CandidateEdge> type_to_node_id,
+        MehlhornDelaunayGraphFactory::TypeToNodeId<CandidateEdge> type_to_node_id,
         NodeId max_id) {
     std::vector<std::vector<CandidateEdge>> bucket_list;
     bucket_list.resize(max_id);
@@ -25,7 +25,7 @@ DelaunayGraphFactory::bucket_sort(
     }
 }
 
-Graph DelaunayGraphFactory::create_delaunay_graph(
+Graph MehlhornDelaunayGraphFactory::create_delaunay_graph(
         DijkstraGraph const &dijkstra_graph,
         Graph const &graph
 ) {
@@ -83,14 +83,14 @@ Graph DelaunayGraphFactory::create_delaunay_graph(
     return {graph.num_nodes(), graph.terminals(), edges};
 }
 
-Graph DelaunayGraphFactory::create_delaunay_graph(const Graph &graph) {
+Graph MehlhornDelaunayGraphFactory::create_delaunay_graph(const Graph &graph) {
     DijkstraGraph dijkstra_graph(graph);
     NodeId root_node = dijkstra_graph.add_node(graph.terminals(), std::vector<WeightType>(graph.terminals().size(), 0));
     dijkstra_graph.dijkstras_algorithm(root_node);
     return create_delaunay_graph(dijkstra_graph, graph);
 }
 
-DelaunayGraphFactory::CandidateEdge::CandidateEdge(NodeId terminal_1, NodeId terminal_2, WeightType weight) :
+MehlhornDelaunayGraphFactory::CandidateEdge::CandidateEdge(NodeId terminal_1, NodeId terminal_2, WeightType weight) :
         smaller_terminal(std::min(terminal_1, terminal_2)),
         larger_terminal(std::max(terminal_1, terminal_2)),
         weight(weight) {}

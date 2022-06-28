@@ -23,6 +23,3 @@ add_executable(Hauptaufgabe_2
         graph/RectilinearGraph.cpp
         graph/RectilinearGraph.h
         heap/BinaryHeap.cpp heap/BinaryHeap.h heap/Heap.h googletest/MainTest.cpp delaunay/DelaunayGraph.cpp delaunay/DelaunayGraph.h delaunay/DelaunaySet.cpp delaunay/DelaunaySet.h delaunay/DelaunayPriorityQueue.cpp delaunay/DelaunayPriorityQueue.h)
-
-
-add_subdirectory(googletest)

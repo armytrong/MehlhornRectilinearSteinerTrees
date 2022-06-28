@@ -20,6 +20,4 @@ bool BinaryHeap::empty() const {
     return false;
 }
 
-BinaryHeap::~BinaryHeap() {
-
-}
+BinaryHeap::~BinaryHeap() = default;

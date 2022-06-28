@@ -2,6 +2,7 @@
 #include <ranges>
 #include <numeric>
 #include "disjoint_set_2.h"
+#include "graph/Graph.h"
 
 Graph kruskal(const Graph &input_graph) {
     Graph return_graph(input_graph.num_nodes(), input_graph.terminals());

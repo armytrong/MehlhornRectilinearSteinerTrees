@@ -14,7 +14,7 @@ public:
 
     void insert(Terminal const &t);
     void del(Terminal const &t);
-    [[nodiscard]] std::optional<DelaunaySet::Terminal> sucessor(Terminal const &t) const;
+    [[nodiscard]] std::optional<DelaunaySet::Terminal> successor(Terminal const &t) const;
     [[nodiscard]] std::optional<DelaunaySet::Terminal> predecessor(Terminal const &t) const;
 
 private:

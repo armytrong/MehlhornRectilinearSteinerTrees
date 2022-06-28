@@ -36,12 +36,12 @@ void DelaunayGraph::calculate() {
         age_counter++;
         if (P.status == ACTIVE) {
             Y.insert(P.terminal);
-            auto sucessor = Y.sucessor(P.terminal);
+            auto successor = Y.successor(P.terminal);
             auto predecessor = Y.predecessor((P.terminal));
-            assert(sucessor.has_value() and predecessor.has_value());
-            if (sucessor->x_coord != -_max_x - 1) {
-                _edges.push_back({P.terminal, *sucessor});
-                update_inactivation_records(X, Y, ages[P.terminal] >= ages[*sucessor] ? *sucessor : P.terminal);
+            assert(successor.has_value() and predecessor.has_value());
+            if (successor->x_coord != -_max_x - 1) {
+                _edges.push_back({P.terminal, *successor});
+                update_inactivation_records(X, Y, ages[P.terminal] >= ages[*successor] ? *successor : P.terminal);
             }
             if (predecessor->x_coord != -_max_x - 1) {
                 _edges.push_back({P.terminal, *predecessor});
@@ -50,9 +50,9 @@ void DelaunayGraph::calculate() {
         } else {
             auto q = Y.predecessor(P.terminal);
             Y.del(P.terminal);
-            auto sucessor = Y.sucessor(*q);
-            if (q->x_coord != -_max_x - 1 and sucessor->x_coord != -_max_x - 1) _edges.push_back({*q, *sucessor});
-            update_inactivation_records(X, Y, ages[*q] >= ages[*sucessor] ? *sucessor : *q);
+            auto successor = Y.successor(*q);
+            if (q->x_coord != -_max_x - 1 and successor->x_coord != -_max_x - 1) _edges.push_back({*q, *successor});
+            update_inactivation_records(X, Y, ages[*q] >= ages[*successor] ? *successor : *q);
         }
     }
 }
@@ -60,7 +60,7 @@ void DelaunayGraph::calculate() {
 void DelaunayGraph::update_inactivation_records(DelaunayPriorityQueue &X, const DelaunaySet &Y,
                                                 DelaunayGraph::Terminal terminal) {
     auto r = Y.predecessor(terminal);
-    auto q = Y.sucessor(terminal);
+    auto q = Y.successor(terminal);
     if (r->x_coord > terminal.x_coord and q->x_coord >= terminal.x_coord) {
         if (X.find_inactivation_record(terminal).has_value()) {
             X.change_priority(terminal, terminal.x_coord + q->y_coord - r->y_coord);

@@ -9,7 +9,7 @@
 #include <optional>
 #include <cmath>
 #include <cassert>
-#include "../typedefs.h"
+#include "typedefs.h"
 #include "Graph.h"
 
 class RectilinearGraph {

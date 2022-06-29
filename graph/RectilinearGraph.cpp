@@ -85,7 +85,7 @@ bool RectilinearGraph::validate_node(NodeId node) const {
     return node >= 0 and node < num_nodes();
 }
 
-Graph RectilinearGraph::create_graph() const {
+Graph RectilinearGraph::export_graph() const {
     Graph result(num_nodes(), _terminals);
     for (NodeId i = 0; i < num_nodes(); i++) {
         if (_horizontal_edges_after_node[i]) {

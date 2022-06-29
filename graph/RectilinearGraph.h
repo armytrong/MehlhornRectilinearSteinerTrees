@@ -35,7 +35,7 @@ public:
         return ret;
     }
 
-    [[nodiscard]] Graph create_graph() const;
+    [[nodiscard]] Graph export_graph() const;
 
     void print_as_postscript(std::ostream &os, const std::string &base_file_name);
 

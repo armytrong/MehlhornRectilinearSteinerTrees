@@ -24,4 +24,4 @@ add_executable(Hauptaufgabe_2
         heap/StandardHeap.h
         graph/RectilinearGraph.cpp
         graph/RectilinearGraph.h
-        heap/BinaryHeap.cpp heap/BinaryHeap.h heap/Heap.h delaunay/DelaunayGraph.cpp delaunay/DelaunayGraph.h delaunay/DelaunaySet.cpp delaunay/DelaunaySet.h delaunay/DelaunayPriorityQueue.cpp delaunay/DelaunayPriorityQueue.h)
+        heap/BinaryHeap.cpp heap/BinaryHeap.h heap/Heap.h delaunay/DelaunayGraph.cpp delaunay/DelaunayGraph.h delaunay/DelaunaySet.cpp delaunay/DelaunaySet.h delaunay/DelaunayPriorityQueue.cpp delaunay/DelaunayPriorityQueue.h ArgumentHandler.cpp ArgumentHandler.h)

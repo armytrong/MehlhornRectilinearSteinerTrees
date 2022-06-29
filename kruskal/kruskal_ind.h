@@ -8,5 +8,8 @@
 
 class Graph;
 
+class DelaunayGraph;
+
 Graph kruskal(const Graph &input_graph);
+DelaunayGraph kruskal(const DelaunayGraph &delaunay_graph);
 

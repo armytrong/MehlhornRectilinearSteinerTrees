@@ -12,7 +12,7 @@
 
 class STPFileParser {
 public:
-    explicit STPFileParser(std::string filename);
+    explicit STPFileParser(std::string filename, size_t instances_to_skip = 0);
 
     Graph create_graph();
     DelaunayGraph create_delaunay_graph();
@@ -29,6 +29,7 @@ private:
 
     static void remove_carriage_return(std::string &s);
 
+    static std::istream &safe_getline(std::istream &istream, std::string &string);
     std::string _filename;
     NodeId _num_nodes;
     NodeId _num_terminals;

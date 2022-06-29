@@ -17,7 +17,7 @@ enum ActiveInactive {
 class DelaunayPriorityQueue {
 public:
     DelaunayPriorityQueue(GridUnit max_x, GridUnit max_y) : MINIMUM_RECORD(
-            {{-max_x, -max_y}, -max_x - max_y, INACTIVE}) {}
+            {{-max_x - 1, -max_y - 1}, -max_x - max_y - 1, INACTIVE}) {}
 
     using Terminal = DelaunayGraph::Terminal;
     struct Record {
@@ -28,9 +28,9 @@ public:
 
     Record extract_min();
     void insert(Terminal const &t, GridUnit trans, ActiveInactive status);
-    std::optional<Record> find_inactivation_record(Terminal t) const;
     void change_priority(Terminal const &t, GridUnit new_trans);
-    bool empty() const;
+    [[nodiscard]] std::optional<Record> find_inactivation_record(Terminal t) const;
+    [[nodiscard]] bool empty() const;
 
 private:
     static constexpr auto greater_fun = [](Record const &rhs, Record const &lhs) {

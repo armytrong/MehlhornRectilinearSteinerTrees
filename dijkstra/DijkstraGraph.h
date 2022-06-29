@@ -7,8 +7,8 @@
 
 #include <iostream>
 #include <vector>
-#include "../typedefs.h"
-#include "../graph/Graph.h"
+#include "typedefs.h"
+#include "graph/Graph.h"
 
 class DijkstraGraph {
 public:
@@ -23,7 +23,6 @@ public:
         bool included = false;
     };
 
-    // TODO: make DijkstraGraph mutable
 
     explicit DijkstraGraph(Graph const &graph);
 

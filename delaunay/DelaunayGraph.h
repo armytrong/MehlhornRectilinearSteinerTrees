@@ -7,6 +7,7 @@
 
 
 #include <ostream>
+#include <utility>
 #include "../typedefs.h"
 #include "../graph/Graph.h"
 
@@ -18,7 +19,7 @@ class DelaunaySet;
 
 class DelaunayGraph {
 public:
-    DelaunayGraph() : _max_x(0), _max_y(0) {}
+    DelaunayGraph() : _max_x(0), _max_y(0), _orig_max_x(0), _orig_max_y(0) {}
 
     struct Terminal {
         Terminal(GridUnit x_coord, GridUnit y_coord, NodeId id = -1) : x_coord(x_coord), y_coord(y_coord), id(id) {}
@@ -27,29 +28,38 @@ public:
         GridUnit y_coord;
         NodeId id;
 
-        bool operator==(Terminal const &other) const { return x_coord == other.x_coord and y_coord == other.y_coord; }
+        bool operator==(Terminal const &other) const;
 
-        bool operator<(Terminal const &other) const {
-            return x_coord < other.x_coord or (x_coord == other.x_coord and y_coord < other.y_coord);
-        }
+        bool operator<(Terminal const &other) const;
+
+        [[nodiscard]] GridUnit distance(Terminal const &other) const;
     };
+
+    explicit DelaunayGraph(std::vector<Terminal> terminals);
 
     struct Edge {
         Terminal terminal_a;
         Terminal terminal_b;
+        [[nodiscard]] bool operator<(Edge const &other) const;
     };
 
-    void add_terminal(GridUnit x_coord, GridUnit y_coord, NodeId id = -1);
+    void add_terminal(GridUnit x_coord, GridUnit y_coord);
+    void add_edge(Terminal terminal_a, Terminal terminal_b);
     void calculate();
     void primitive_print(std::ostream &os);
 
     void translate_from_1_to_infty_norm();
     void translate_from_infty_to_1_norm();
 
-
     Graph export_graph();
 
     void print_as_postscript(std::ostream &os, const std::string &base_file_name);
+
+    [[nodiscard]] NodeId num_terminals() const;
+    [[nodiscard]] EdgeId num_edges() const;
+    [[nodiscard]] std::vector<Terminal> const &terminals() const;
+    [[nodiscard]] std::vector<Edge> const &edges() const;
+
 
 private:
 
@@ -59,7 +69,7 @@ private:
 
     std::vector<Terminal> _terminals;
     std::vector<Edge> _edges;
-    GridUnit _max_x, _max_y;
+    GridUnit _max_x, _max_y, _orig_max_x, _orig_max_y;
 };
 
 

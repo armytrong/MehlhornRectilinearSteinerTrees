@@ -59,7 +59,9 @@ Graph MehlhornDelaunayGraphFactory::create_delaunay_graph(
     std::optional<CandidateEdge> current_mincost_edge = std::nullopt;
 
     for (auto candidate_edge: candidate_edges) {
-        if (not current_mincost_edge.has_value()) { current_mincost_edge = candidate_edge; }
+        if (not current_mincost_edge.has_value()
+            or current_mincost_edge->weight >
+               candidate_edge.weight) { current_mincost_edge = candidate_edge; }
 
         else if (not(
                 current_mincost_edge->larger_terminal == candidate_edge.larger_terminal and
@@ -71,8 +73,7 @@ Graph MehlhornDelaunayGraphFactory::create_delaunay_graph(
                     current_mincost_edge->weight
             );
             current_mincost_edge = candidate_edge;
-        } else if (current_mincost_edge->weight >
-                   candidate_edge.weight) { current_mincost_edge = candidate_edge; }
+        }
     }
     edges.emplace_back(
             current_mincost_edge->smaller_terminal,

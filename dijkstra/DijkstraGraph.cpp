@@ -8,7 +8,6 @@
 #include "../heap/FibonacciHeap.h"
 #include "../heap/StandardHeap.h"
 #include <map>
-#include <cassert>
 
 
 DijkstraGraph::DijkstraGraph(Graph const &graph) : _calculation_finished(false) {
@@ -32,8 +31,6 @@ const DijkstraGraph::Node &DijkstraGraph::operator[](NodeId index) const {
 
 void DijkstraGraph::dijkstras_algorithm(NodeId root_node_id) {
 
-    // auto id_to_node_projection = [this](auto const node_id) { return _nodes[node_id]; };
-
     if (root_node_id >= _nodes.size()) {
         throw std::invalid_argument("Root node not in graph.");
     }
@@ -44,7 +41,6 @@ void DijkstraGraph::dijkstras_algorithm(NodeId root_node_id) {
         node.closest_terminal = -1;
         node.distance_to_root = -1;
         node.predecessor = -1;
-        node.included = false;
     }
 
     StandardHeap candidates = StandardHeap{};
@@ -61,7 +57,6 @@ void DijkstraGraph::dijkstras_algorithm(NodeId root_node_id) {
     while (!candidates.empty()) {
         NodeId node_v_id = candidates.extract_min();
         Node &node_v = _nodes[node_v_id];
-        node_v.included = true;
 
         // for (auto const& node_w : node_v.neighbours | std::views::transform(id_to_node_projection))
         // Fände ich auch schöner so, aber CLion beschwert sich da irgendwie. Vielleicht habe ich da was falsch
@@ -74,7 +69,6 @@ void DijkstraGraph::dijkstras_algorithm(NodeId root_node_id) {
 
             if (node_w.distance_to_root == -1) {
 
-                // TODO: extract method
                 node_w.predecessor = node_v_id;
                 node_w.distance_to_root = node_v.distance_to_root + edge_weight;
 
@@ -95,7 +89,6 @@ void DijkstraGraph::dijkstras_algorithm(NodeId root_node_id) {
                 // key in the prioritiy queue
             else if (node_w.distance_to_root > node_v.distance_to_root + edge_weight) {
 
-                // TODO: extract method
                 node_w.distance_to_root = node_v.distance_to_root + edge_weight;
                 candidates.decrease_key(node_w_id, node_w.distance_to_root);
                 node_w.predecessor = node_v_id;

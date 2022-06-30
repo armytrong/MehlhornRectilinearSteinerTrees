@@ -8,12 +8,12 @@
 
 #include "Heap.h"
 
-class BinaryHeap : public Heap {
+class [[maybe_unused]] BinaryHeap : public Heap {
 public:
     void insert(IdType item_id, KeyType key) override;
     int extract_min() override;
     void decrease_key(int item_id, int new_key) override;
-    bool empty() const override;
+    [[nodiscard]] bool empty() const override;
     ~BinaryHeap() override;
 };
 

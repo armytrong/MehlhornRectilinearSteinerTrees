@@ -55,9 +55,9 @@ private:
 
     static void swap_if_a_larger(NodeId &node_a, NodeId &node_b);
 
-    int x_coord(NodeId node) const;
+    [[nodiscard]] int x_coord(NodeId node) const;
 
-    int y_coord(NodeId node) const;
+    [[nodiscard]] int y_coord(NodeId node) const;
 };
 
 

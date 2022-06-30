@@ -14,12 +14,10 @@ class STPFileParser {
 public:
     explicit STPFileParser(std::string filename, size_t instances_to_skip = 0);
 
-    Graph create_graph();
+    [[maybe_unused]] Graph create_graph();
     DelaunayGraph create_delaunay_graph();
 
 private:
-
-    [[nodiscard]] std::ifstream open_input_file() const;
 
     void read_graph_from_file(std::istream &file);
 

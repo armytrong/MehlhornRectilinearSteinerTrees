@@ -20,7 +20,6 @@ public:
         NodeId predecessor = -1;
         NodeId closest_terminal = -1;
         WeightType distance_to_root = -1;
-        bool included = false;
     };
 
 

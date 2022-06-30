@@ -7,8 +7,6 @@ include_directories(.)
 
 add_executable(Hauptaufgabe_2
         main.cpp
-        SteinerTreeApproximator.cpp
-        SteinerTreeApproximator.h
         STPFileParser.cpp STPFileParser.h
         dijkstra/DijkstraGraph.cpp
         dijkstra/DijkstraGraph.h

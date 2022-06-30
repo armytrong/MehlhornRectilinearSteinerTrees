@@ -81,7 +81,7 @@ STPFileParser::STPFileParser(std::string filename, size_t instances_to_skip) : _
 
 }
 
-Graph STPFileParser::create_graph() {
+[[maybe_unused]] Graph STPFileParser::create_graph() {
     return {_num_nodes, _terminals, _edges};
 }
 

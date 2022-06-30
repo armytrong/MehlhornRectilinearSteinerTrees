@@ -17,12 +17,6 @@ enum struct OutputFormat {
 
 class ArgumentHandler {
 public:
-    struct OstreamWrapper {
-        explicit OstreamWrapper(std::ostream &o) : ostream(o) {}
-
-        std::ostream &ostream;
-    };
-
     struct Parms {
         std::string input_filename;
         std::string output_filename;

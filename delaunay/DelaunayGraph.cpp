@@ -4,7 +4,6 @@
 
 #include <map>
 #include "DelaunayGraph.h"
-#include "../heap/BinaryHeap.h"
 #include "DelaunayPriorityQueue.h"
 #include "DelaunaySet.h"
 #include <fstream>
@@ -72,7 +71,7 @@ void DelaunayGraph::update_inactivation_records(DelaunayPriorityQueue &X, const 
     }
 }
 
-void DelaunayGraph::primitive_print(std::ostream &os) {
+[[maybe_unused]] void DelaunayGraph::primitive_print(std::ostream &os) {
     os << "Terminals: " << std::endl;
     for (auto const &terminal: _terminals) {
         os << "id: " << terminal.id << ", x: " << terminal.x_coord << ", y: " << terminal.y_coord << std::endl;
@@ -96,8 +95,7 @@ Graph DelaunayGraph::export_graph() {
         ret.add_edge({
                              edge.terminal_a.x_coord + edge.terminal_a.y_coord * sqrt,
                              edge.terminal_b.x_coord + edge.terminal_b.y_coord * sqrt,
-                             std::abs(edge.terminal_a.x_coord - edge.terminal_b.x_coord)
-                             + std::abs(edge.terminal_a.y_coord - edge.terminal_b.y_coord)
+                             edge.terminal_a.distance(edge.terminal_b)
                      });
     }
 
@@ -140,7 +138,7 @@ void DelaunayGraph::translate_from_infty_to_1_norm() {
     }
 }
 
-void DelaunayGraph::print_as_postscript(std::ostream &os, const std::string &base_file_name) {
+[[maybe_unused]] void DelaunayGraph::print_as_postscript(std::ostream &os, const std::string &base_file_name) {
     std::ifstream base_file(base_file_name);
     assert(base_file);
     std::string line;
@@ -186,7 +184,7 @@ EdgeId DelaunayGraph::num_edges() const { return static_cast<EdgeId>(_edges.size
 
 const std::vector<DelaunayGraph::Edge> &DelaunayGraph::edges() const { return _edges; }
 
-NodeId DelaunayGraph::num_terminals() const { return _terminals.size(); }
+NodeId DelaunayGraph::num_terminals() const { return static_cast<NodeId>(_terminals.size()); }
 
 void DelaunayGraph::add_edge(DelaunayGraph::Terminal terminal_a, DelaunayGraph::Terminal terminal_b) {
     _edges.push_back({terminal_a, terminal_b});

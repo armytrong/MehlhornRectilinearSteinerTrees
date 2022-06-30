@@ -4,7 +4,6 @@
 
 #include <stack>
 #include <stdexcept>
-#include <cassert>
 #include "FibonacciHeap.h"
 
 FibonacciHeap::Node::Node(int item_id, int key) {
@@ -71,13 +70,6 @@ int FibonacciHeap::extract_min() {
     }
     for (int i = 0; i < _roots.size(); i++) {
         if (_roots[i] != nullptr) {
-
-            // These asserts are only sensible, if I find a notion of knowing the maximum possible index,
-            // istead of choosing an arbitrary (large) value i.e. 10000.
-
-            // assert(_roots[i]->key >= 0 && _roots[i]->key <= 10000);
-            // assert(_roots[min_index]->key >= 0 && _roots[i]->key <= 10000);
-
             if (_roots[i]->key < _roots[min_index]->key) {
                 min_index = i;
             }

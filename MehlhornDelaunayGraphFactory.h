@@ -9,11 +9,11 @@
 #include "graph/Graph.h"
 #include "dijkstra/DijkstraGraph.h"
 
-class MehlhornDelaunayGraphFactory {
+class [[maybe_unused]] MehlhornDelaunayGraphFactory {
 public:
 
 
-    static Graph create_delaunay_graph(Graph const &graph);
+    [[maybe_unused]] static Graph create_delaunay_graph(Graph const &graph);
 
     static Graph create_delaunay_graph(DijkstraGraph const &dijkstra_graph, Graph const &graph);
 

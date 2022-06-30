@@ -46,14 +46,14 @@ public:
     void add_terminal(GridUnit x_coord, GridUnit y_coord);
     void add_edge(Terminal terminal_a, Terminal terminal_b);
     void calculate();
-    void primitive_print(std::ostream &os);
+    [[maybe_unused]] void primitive_print(std::ostream &os);
 
     void translate_from_1_to_infty_norm();
     void translate_from_infty_to_1_norm();
 
     Graph export_graph();
 
-    void print_as_postscript(std::ostream &os, const std::string &base_file_name);
+    [[maybe_unused]] void print_as_postscript(std::ostream &os, const std::string &base_file_name);
 
     [[nodiscard]] NodeId num_terminals() const;
     [[nodiscard]] EdgeId num_edges() const;
@@ -64,8 +64,8 @@ public:
 private:
 
     static void update_inactivation_records(DelaunayPriorityQueue &X, DelaunaySet const &Y, Terminal terminal);
-    void translate_terminal_from_1_to_infty_norm(Terminal &t);
-    void translate_terminal_from_infty_to_1_norm(Terminal &t);
+    static void translate_terminal_from_1_to_infty_norm(Terminal &t);
+    static void translate_terminal_from_infty_to_1_norm(Terminal &t);
 
     std::vector<Terminal> _terminals;
     std::vector<Edge> _edges;

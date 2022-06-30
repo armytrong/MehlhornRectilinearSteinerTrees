@@ -6,10 +6,14 @@
 #define HAUPTAUFGABE_2_TYPEDEFS_H
 
 #include <vector>
+#include <iostream>
+
+//#define DEBUG
 
 using NodeId = int;
 using EdgeId = int;
 using GridUnit = int;
 using WeightType = int;
+
 
 #endif //HAUPTAUFGABE_2_TYPEDEFS_H

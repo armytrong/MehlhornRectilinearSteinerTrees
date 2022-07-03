@@ -62,7 +62,7 @@ std::optional<EdgeId> RectilinearGraph::get_horizontal_connecting_edge(NodeId no
     } else return std::nullopt;
 }
 
-std::optional<EdgeId> RectilinearGraph::get_vertical_conecting_edge(NodeId node_a, NodeId node_b) const {
+std::optional<EdgeId> RectilinearGraph::get_vertical_connecting_edge(NodeId node_a, NodeId node_b) const {
     swap_if_a_larger(node_a, node_b);
 
     if (node_a % _grid_width == node_b % _grid_width) {

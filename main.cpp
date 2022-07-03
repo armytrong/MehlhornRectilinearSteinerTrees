@@ -12,10 +12,16 @@ int main(int argc, char *argv[]) {
 
     auto print_verbose = [& parms](std::string const &s) { if (parms.verbose) std::cout << s << std::endl; };
 
-    STPFileParser parser(parms.input_filename, parms.instances_to_skip);
-    print_verbose("input parsed");
+    DelaunayGraph delaunay_graph;
+    try {
+        STPFileParser parser(parms);
+        print_verbose("input parsed");
+        delaunay_graph = parser.create_delaunay_graph();
+    } catch (std::invalid_argument const &e) {
+        std::cerr << "Failed to read input. Error: " << e.what() << std::endl;
+        return 1;
+    }
 
-    DelaunayGraph delaunay_graph = parser.create_delaunay_graph();
     delaunay_graph.translate_from_1_to_infty_norm();
     delaunay_graph.calculate();
     delaunay_graph.translate_from_infty_to_1_norm();

@@ -10,8 +10,8 @@
 #include <cassert>
 #include <complex>
 
-void DelaunayGraph::add_terminal(GridUnit x_coord, GridUnit y_coord) {
-    _terminals.emplace_back(x_coord, y_coord, _terminals.size());
+void DelaunayGraph::add_terminal(GridUnit x_coord, GridUnit y_coord, NodeId terminal_id) {
+    _terminals.emplace_back(x_coord, y_coord, _terminals.size(), terminal_id);
     _max_x = std::max(_max_x, std::abs(x_coord));
     _max_y = std::max(_max_y, std::abs(y_coord));
     _orig_max_x = _max_x;
@@ -74,7 +74,8 @@ void DelaunayGraph::update_inactivation_records(DelaunayPriorityQueue &X, const 
 [[maybe_unused]] void DelaunayGraph::primitive_print(std::ostream &os) {
     os << "Terminals: " << std::endl;
     for (auto const &terminal: _terminals) {
-        os << "id: " << terminal.id << ", x: " << terminal.x_coord << ", y: " << terminal.y_coord << std::endl;
+        os << "internal_id: " << terminal.internal_id << ", x: " << terminal.x_coord << ", y: " << terminal.y_coord
+           << std::endl;
     }
     os << std::endl << "Edges: " << std::endl;
     for (auto const &edge: _edges) {

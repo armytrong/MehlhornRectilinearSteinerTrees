@@ -49,7 +49,7 @@ private:
     get_horizontal_connecting_edge(NodeId node_a, NodeId node_b) const;
 
     [[maybe_unused]] [[nodiscard]] std::optional<EdgeId>
-    get_vertical_conecting_edge(NodeId node_a, NodeId node_b) const;
+    get_vertical_connecting_edge(NodeId node_a, NodeId node_b) const;
 
     [[nodiscard]] bool validate_node(NodeId node) const;
 

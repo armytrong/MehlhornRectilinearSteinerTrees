@@ -15,5 +15,10 @@ using EdgeId = int;
 using GridUnit = int;
 using WeightType = int;
 
+struct Coord {
+    GridUnit x;
+    GridUnit y;
+};
+
 
 #endif //HAUPTAUFGABE_2_TYPEDEFS_H

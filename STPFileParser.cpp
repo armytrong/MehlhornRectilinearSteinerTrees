@@ -12,7 +12,7 @@
 
 constexpr char FILE_HEADER[] = "33D32945 STP File, STP Format Version 1.0";
 
-STPFileParser::STPFileParser(std::string filename, size_t instances_to_skip) : _filename(std::move(filename)) {
+STPFileParser::STPFileParser(ArgumentHandler::Parms const &parms) : _filename(std::move(parms.input_filename)) {
 
     _num_nodes = -1;
 
@@ -25,21 +25,17 @@ STPFileParser::STPFileParser(std::string filename, size_t instances_to_skip) : _
     // skip the required number of instances in the input
     std::string line;
     safe_getline(input, line); // read the first line of the input
-//    while (line.empty())      // find the first non-empty line
-//    {
-//        safe_getline(input, line);
-//    }
-    for (size_t i = 0; i < instances_to_skip + 1; i++) {
+    for (size_t i = 0; i < parms.instances_to_skip + 1; i++) {
         while (line != FILE_HEADER and not input.eof()) {
             safe_getline(input, line);
             remove_carriage_return(line);
         }
+        safe_getline(input, line);
     }
 
-    // check for valid input header
-//    if (line != FILE_HEADER) {
-//        throw std::invalid_argument("Invalid input format.");
-//    }
+    if (input.eof()) {
+        throw std::invalid_argument("Invalid input format: No stp-instance found");
+    }
 
     bool graph_found = false;
     bool terminals_found = false;
@@ -49,28 +45,31 @@ STPFileParser::STPFileParser(std::string filename, size_t instances_to_skip) : _
         if (not safe_getline(input, line)) {
             throw std::invalid_argument("Invalid input format: EOF expected");
         }
-        remove_carriage_return(line);
-        if (line == "SECTION Graph") {
+        if (line == "SECTION Graph" or line == "Section Graph") {
             if (graph_found) {
                 throw std::invalid_argument("Invalid input format: Multiple graphs in input.");
             } else {
                 read_graph_from_file(input);
                 graph_found = true;
             }
-        } else if (line == "SECTION Terminals") {
+        } else if (line == "SECTION Terminals" or line == "Section Terminals") {
             if (terminals_found) {
                 throw std::invalid_argument("Invalid input format: Multiple terminal sections in input.");
             } else {
                 read_terminals_from_file(input);
                 terminals_found = true;
             }
-        } else if (line == "SECTION Coordinates") {
+        } else if (line == "SECTION Coordinates" or line == "Section Coordinates") {
             if (coordinates_found) {
                 throw std::invalid_argument("Invalid input format: Multiple coordinate sections in input.");
             }
-            _num_terminals = _num_nodes;
-            _num_nodes = 10000 * 10000;
-            read_coordinates_from_file(input);
+            if (parms.nodes_are_terminals) {
+                _num_terminals = _num_nodes;
+                _num_nodes = 10000 * 10000;
+                read_coordinates_from_file(input, true);
+            } else {
+                read_coordinates_from_file(input, false);
+            }
             coordinates_found = true;
         }
     }
@@ -91,7 +90,7 @@ void STPFileParser::read_graph_from_file(std::istream &file) {
     int val_1, val_2, val_3;
     int num_edges = 0;
 
-    while (line != "END") {
+    while (line != "END" and line != "End") {
         if (!safe_getline(file, line) or line == "EOF" or line == "EOF\r") {
             throw std::invalid_argument("Invalid file format.");
         }
@@ -122,9 +121,9 @@ void STPFileParser::read_terminals_from_file(std::istream &file) {
     std::string specifier;
     int val;
 
-    while (line != "END") {
+    while (line != "END" and line != "End") {
         if (!safe_getline(file, line) or line == "EOF" or line == "EOF\r") {
-            throw std::invalid_argument("Invalid file format.");
+            throw std::invalid_argument("Invalid file format: END expected");
         }
         std::stringstream ss(line);
         ss >> specifier >> val;
@@ -141,24 +140,34 @@ void STPFileParser::read_terminals_from_file(std::istream &file) {
     }
 }
 
-void STPFileParser::read_coordinates_from_file(std::istream &file) {
+void STPFileParser::read_coordinates_from_file(std::istream &file, bool nodes_are_terminals) {
     std::string line;
     std::string specifier;
-    int terminal_id, x_coord, y_coord;
-    while (line != "END") {
-        if (!safe_getline(file, line) or line == "EOF" or line == "EOF\r") {
-            throw std::invalid_argument("Invalid file format.");
+    int node_id, x_coord, y_coord;
+    while (line != "END" and line != "End") {
+        if (!safe_getline(file, line) or line == "EOF") {
+            throw std::invalid_argument("Invalid file format: END expected");
         }
-        remove_carriage_return(line);
         std::stringstream ss(line);
-        ss >> specifier >> terminal_id >> x_coord >> y_coord;
+        ss >> specifier >> node_id >> x_coord >> y_coord;
+
+        if (not nodes_are_terminals) {
+            _node_coords.resize(_num_nodes);
+        }
+
         if (specifier == "DD") {
             // TODO where do the coordiantes begin, at 0,0 or 1,1?
-            _terminals.push_back((y_coord /* -1 */) * 10000 + x_coord /* -1 */ );
+            if (nodes_are_terminals) {
+                _terminals.push_back((y_coord /* -1 */) * 10000 + x_coord /* -1 */ );
+            } else {
+                _node_coords[node_id] = {x_coord, y_coord};
+            }
         }
     }
-    if ((size_t) _num_terminals != _terminals.size()) {
-        throw std::invalid_argument("Invalid file format. Wrong number of terminals.");
+    if (nodes_are_terminals) {
+        if ((size_t) _num_terminals != _terminals.size()) {
+            throw std::invalid_argument("Invalid file format. Wrong number of terminals.");
+        }
     }
 }
 
@@ -171,18 +180,21 @@ inline void STPFileParser::remove_carriage_return(std::string &s) {
 DelaunayGraph STPFileParser::create_delaunay_graph() {
     DelaunayGraph delaunay_graph;
     auto sqrt = static_cast<GridUnit>(std::sqrt(_num_nodes));
-    assert(sqrt * sqrt == _num_nodes);
+    if (_node_coords.empty()) {
+        assert(sqrt * sqrt == _num_nodes);
+    }
     for (auto terminal_id: _terminals) {
-        delaunay_graph.add_terminal(terminal_id % sqrt, static_cast<GridUnit>(terminal_id / sqrt));
+        if (_node_coords.empty()) {
+            delaunay_graph.add_terminal(terminal_id % sqrt, static_cast<GridUnit>(terminal_id / sqrt));
+        } else {
+            delaunay_graph.add_terminal(_node_coords[terminal_id].x, _node_coords[terminal_id].y);
+        }
     }
     return delaunay_graph;
 }
 
 inline std::istream &STPFileParser::safe_getline(std::istream &istream, std::string &string) {
     auto &ret = std::getline(istream, string);
-    if (not ret or istream.eof()) {
-        throw std::invalid_argument("invalid input format expected EOF");
-    }
     remove_carriage_return(string);
     return ret;
 }

@@ -9,6 +9,7 @@
 #include <vector>
 #include "typedefs.h"
 #include "graph/Graph.h"
+#include "delaunay/DelaunayGraph.h"
 
 class DijkstraGraph {
 public:
@@ -24,6 +25,7 @@ public:
 
 
     explicit DijkstraGraph(Graph const &graph);
+    explicit DijkstraGraph(DelaunayGraph const &delaunay_graph);
 
     Node &operator[](NodeId index);
 
@@ -36,6 +38,8 @@ public:
     [[maybe_unused]] Graph generate_output_graph();
 
     [[nodiscard]] bool calculation_finished() const;
+
+    [[nodiscard]] NodeId predecessor(NodeId node) const;
 
 private:
     std::vector<Node> _nodes;

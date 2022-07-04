@@ -45,6 +45,7 @@ public:
 
         [[nodiscard]] bool operator<(Edge const &other) const;
         [[nodiscard]] bool operator==(Edge const &other) const;
+        [[nodiscard]] WeightType length() const;
     };
 
     void add_node(GridUnit x_coord, GridUnit y_coord, NodeId node_id = -1);
@@ -61,10 +62,12 @@ public:
     [[maybe_unused]] void print_as_postscript(std::ostream &os, const std::string &base_file_name);
 
     [[nodiscard]] NodeId num_nodes() const;
-
+    [[nodiscard]] NodeId num_terminals() const;
     [[nodiscard]] EdgeId num_edges() const;
     [[nodiscard]] std::vector<Node> const &nodes() const;
     [[nodiscard]] std::vector<Edge> const &edges() const;
+
+    [[nodiscard]] bool is_terminal_id(NodeId node_id) const;
 
 
 private:

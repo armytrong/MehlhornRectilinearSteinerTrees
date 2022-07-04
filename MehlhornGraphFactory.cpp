@@ -6,8 +6,7 @@
 #include <optional>
 #include "MehlhornGraphFactory.h"
 
-void
-MehlhornGraphFactory::bucket_sort(
+void MehlhornGraphFactory::bucket_sort(
         std::vector<CandidateEdge> &vector,
         MehlhornGraphFactory::TypeToNodeId<CandidateEdge> type_to_node_id,
         NodeId max_id) {

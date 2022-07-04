@@ -235,6 +235,10 @@ void DelaunayGraph::add_steiner_points() {
     }
 }
 
+NodeId DelaunayGraph::num_terminals() const { return _num_terminals; }
+
+bool DelaunayGraph::is_terminal_id(NodeId node_id) const { return node_id < num_terminals(); }
+
 bool DelaunayGraph::Node::operator==(const DelaunayGraph::Node &other) const {
     return x_coord == other.x_coord and y_coord == other.y_coord;
 }
@@ -253,4 +257,8 @@ bool DelaunayGraph::Edge::operator<(const DelaunayGraph::Edge &other) const {
 
 bool DelaunayGraph::Edge::operator==(Edge const &other) const {
     return node_a == other.node_a and node_b == other.node_b;
+}
+
+WeightType DelaunayGraph::Edge::length() const {
+    return std::abs(node_a.x_coord - node_b.x_coord) + std::abs(node_a.y_coord - node_b.y_coord);
 }

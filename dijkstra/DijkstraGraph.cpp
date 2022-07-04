@@ -8,6 +8,7 @@
 #include "../heap/FibonacciHeap.h"
 #include "../heap/StandardHeap.h"
 #include <map>
+#include <cassert>
 
 
 DijkstraGraph::DijkstraGraph(Graph const &graph) : _calculation_finished(false) {
@@ -25,15 +26,28 @@ DijkstraGraph::DijkstraGraph(Graph const &graph) : _calculation_finished(false) 
     }
 }
 
+DijkstraGraph::DijkstraGraph(const DelaunayGraph &delaunay_graph) {
+    _nodes = std::vector<Node>(delaunay_graph.num_nodes());
+    for (size_t i = 0; i < _nodes.size(); i++) {
+        _nodes[i]._id = static_cast<NodeId>(i);
+    }
+
+    for (auto const &edge: delaunay_graph.edges()) {
+        _nodes[edge.node_a.internal_id].neighbours.push_back(edge.node_b.internal_id);
+        _nodes[edge.node_a.internal_id].weights.push_back(edge.length());
+
+        _nodes[edge.node_b.internal_id].neighbours.push_back(edge.node_a.internal_id);
+        _nodes[edge.node_b.internal_id].weights.push_back(edge.length());
+    }
+}
+
 const DijkstraGraph::Node &DijkstraGraph::operator[](NodeId index) const {
     return _nodes[index];
 }
 
 void DijkstraGraph::dijkstras_algorithm(NodeId root_node_id) {
 
-    if (root_node_id >= _nodes.size()) {
-        throw std::invalid_argument("Root node not in graph.");
-    }
+    assert(root_node_id >= _nodes.size() && "Root node must be in graph.");
 
     Node &root_node = _nodes[root_node_id];
 
@@ -43,12 +57,8 @@ void DijkstraGraph::dijkstras_algorithm(NodeId root_node_id) {
         node.predecessor = -1;
     }
 
-    StandardHeap candidates = StandardHeap{};
+    StandardHeap candidates;
 //    FibonacciHeap candidates;
-    Heap &candidates_2 = candidates;
-    Heap *candidates_3 = new StandardHeap{};
-
-    delete candidates_3;
 
     candidates.insert(root_node_id, 0);
 
@@ -138,6 +148,11 @@ NodeId DijkstraGraph::add_node(std::vector<NodeId> neighbours, std::vector<Weigh
 }
 
 bool DijkstraGraph::calculation_finished() const { return _calculation_finished; }
+
+NodeId DijkstraGraph::predecessor(NodeId node) const {
+    assert(calculation_finished());
+    return _nodes[node].predecessor;
+}
 
 
 

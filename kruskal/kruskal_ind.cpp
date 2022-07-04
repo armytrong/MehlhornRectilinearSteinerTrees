@@ -34,7 +34,7 @@ Graph kruskal(const Graph &input_graph) {
 }
 
 DelaunayGraph kruskal(DelaunayGraph const &delaunay_graph) {
-    DelaunayGraph return_graph(delaunay_graph.terminals());
+    DelaunayGraph return_graph(delaunay_graph.nodes());
     std::vector<EdgeId> edge_ids(delaunay_graph.num_edges());
     std::iota(edge_ids.begin(), edge_ids.end(), 0);
 
@@ -45,15 +45,15 @@ DelaunayGraph kruskal(DelaunayGraph const &delaunay_graph) {
                   return (id_to_edge_projection(a) < id_to_edge_projection(b));
               });
     Disjoint_Set set;
-    set.make_sets(return_graph.num_terminals());
+    set.make_sets(return_graph.num_nodes());
     for (auto edge_id: edge_ids) {
         auto const &edge = id_to_edge_projection(edge_id);
 
-        if (!set.set_equals(edge.terminal_a.internal_id, edge.terminal_b.internal_id)) {
+        if (!set.set_equals(edge.node_a.internal_id, edge.node_b.internal_id)) {
             // unite the sets of the parents of the nodes of edge
-            set.unite(edge.terminal_a.internal_id, edge.terminal_b.internal_id);
+            set.unite(edge.node_a.internal_id, edge.node_b.internal_id);
             // add edge to the vector of included edges
-            return_graph.add_edge(edge.terminal_a, edge.terminal_b);
+            return_graph.add_edge(edge.node_a, edge.node_b);
         }
     }
 

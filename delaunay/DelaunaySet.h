@@ -10,7 +10,7 @@
 
 class DelaunaySet {
 public:
-    using Terminal = DelaunayGraph::Terminal;
+    using Terminal = DelaunayGraph::Node;
 
     void insert(Terminal const &t);
     void del(Terminal const &t);

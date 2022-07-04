@@ -22,10 +22,11 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    delaunay_graph.translate_from_1_to_infty_norm();
-    delaunay_graph.calculate();
-    delaunay_graph.translate_from_infty_to_1_norm();
+    delaunay_graph.calculate_l1_delaunay_triangulation();
+    delaunay_graph.add_steiner_points();
+    delaunay_graph.calculate_l1_delaunay_triangulation();
     print_verbose("Delaunay triangulation complete");
+
 
     auto kruskal_graph = kruskal(delaunay_graph);
     print_verbose("first kruskal complete");

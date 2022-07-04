@@ -19,7 +19,7 @@ public:
     DelaunayPriorityQueue(GridUnit max_x, GridUnit max_y) : MINIMUM_RECORD(
             {{-max_x - 1, -max_y - 1}, -max_x - max_y - 1, INACTIVE}) {}
 
-    using Terminal = DelaunayGraph::Terminal;
+    using Terminal = DelaunayGraph::Node;
     struct Record {
         Terminal terminal;
         GridUnit trans;

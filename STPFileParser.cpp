@@ -106,7 +106,7 @@ void STPFileParser::read_graph_from_file(std::istream &file) {
                 throw std::invalid_argument("Invalid file foramt: Invalid edge.");
             }
             // TODO Hier sollte man auch gegen values die trotzdem 0 sind guarden
-            // subtract 1 from node_id, this program is 0-based
+            // subtract 1 from original_node_id, this program is 0-based
             _edges.emplace_back(val_1 - 1, val_2 - 1, val_3);
         }
     }
@@ -131,7 +131,7 @@ void STPFileParser::read_terminals_from_file(std::istream &file) {
             _terminals.reserve(val);
             _num_terminals = val;
         } else if (specifier == "T") {
-            // subtract 1 from node_id, this program is 0-based
+            // subtract 1 from original_node_id, this program is 0-based
             _terminals.push_back(val - 1);
         }
     }
@@ -185,9 +185,9 @@ DelaunayGraph STPFileParser::create_delaunay_graph() {
     }
     for (auto terminal_id: _terminals) {
         if (_node_coords.empty()) {
-            delaunay_graph.add_terminal(terminal_id % sqrt, static_cast<GridUnit>(terminal_id / sqrt));
+            delaunay_graph.add_node(terminal_id % sqrt, static_cast<GridUnit>(terminal_id / sqrt));
         } else {
-            delaunay_graph.add_terminal(_node_coords[terminal_id].x, _node_coords[terminal_id].y);
+            delaunay_graph.add_node(_node_coords[terminal_id].x, _node_coords[terminal_id].y);
         }
     }
     return delaunay_graph;

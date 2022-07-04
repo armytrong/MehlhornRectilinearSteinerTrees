@@ -80,7 +80,7 @@ void DijkstraGraph::dijkstras_algorithm(NodeId root_node_id) {
                 if (node_v_id == root_node_id) {
                     node_w.closest_terminal = node_w_id;
                 }
-                    // Otherwise w has the same closest Terminal as v, if not updated later.
+                    // Otherwise w has the same closest Node as v, if not updated later.
                 else {
                     node_w.closest_terminal = node_v.closest_terminal;
                 }
@@ -101,7 +101,7 @@ void DijkstraGraph::dijkstras_algorithm(NodeId root_node_id) {
                 if (node_v_id == root_node_id) {
                     node_w.closest_terminal = node_w_id;
                 }
-                    // Otherwise w has the same closest Terminal as v, if not updated later.
+                    // Otherwise w has the same closest Node as v, if not updated later.
                 else {
                     node_w.closest_terminal = node_v.closest_terminal;
                 }

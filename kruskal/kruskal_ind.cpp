@@ -17,14 +17,14 @@ Graph kruskal(const Graph &input_graph) {
               [&id_to_edge_projection](EdgeId a, EdgeId b) {
                   return (id_to_edge_projection(a) < id_to_edge_projection(b));
               });
-    Disjoint_Set set;
-    set.make_sets(return_graph.num_nodes());
+    Disjoint_Set disjoint_set;
+    disjoint_set.make_sets(return_graph.num_nodes());
     for (auto edge_id: edge_ids) {
         auto const &edge = id_to_edge_projection(edge_id);
 
-        if (!set.set_equals(edge._head, edge._tail)) {
+        if (!disjoint_set.set_equals(edge._head, edge._tail)) {
             // unite the sets of the parents of the nodes of edge
-            set.unite(edge._head, edge._tail);
+            disjoint_set.unite(edge._head, edge._tail);
             // add edge to the vector of included edges
             return_graph.add_edge(edge);
         }

@@ -3,6 +3,7 @@
 #include "kruskal/kruskal_ind.h"
 #include "graph/RectilinearGraph.h"
 #include "ArgumentHandler.h"
+#include "mehlhorn/MehlhornGraph.h"
 
 int main(int argc, char *argv[]) {
     ArgumentHandler argument_handler(argc, argv);
@@ -25,10 +26,13 @@ int main(int argc, char *argv[]) {
     delaunay_graph.calculate_l1_delaunay_triangulation();
     delaunay_graph.add_steiner_points();
     delaunay_graph.calculate_l1_delaunay_triangulation();
-    print_verbose("Delaunay triangulation complete");
+    print_verbose("Delaunay triangulation complete.");
 
+    MehlhornGraph mehlhorn_graph(delaunay_graph);
+    mehlhorn_graph.calculate_mehlhorn_graph();
+    print_verbose("Mehlhorn Graph calculated.");
 
-    auto kruskal_graph = kruskal(delaunay_graph);
+    mehlhorn_graph.kruskal_on_mehlhorn_edges();
     print_verbose("first kruskal complete");
 
     RectilinearGraph rect_graph(kruskal_graph.export_graph());

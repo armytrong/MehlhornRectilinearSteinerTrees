@@ -20,11 +20,15 @@ public:
         [[nodiscard]] NodeId smaller_node() const { return tail < head ? tail : head; }
 
         [[nodiscard]] NodeId larger_node() const { return tail > head ? tail : head; }
+
+        [[nodiscard]] bool operator<(Edge const &other) const;
     };
 
     explicit MehlhornGraph(DelaunayGraph const &delaunay_graph) : _delaunay_graph(delaunay_graph) {}
 
     void calculate_mehlhorn_graph();
+
+    void kruskal_on_mehlhorn_edges();
 
 private:
 

@@ -7,6 +7,7 @@
 #include <optional>
 #include "MehlhornGraph.h"
 #include "dijkstra/DijkstraGraph.h"
+#include "kruskal/disjoint_set_2.h"
 
 void MehlhornGraph::calculate_mehlhorn_graph() {
     DijkstraGraph dijkstra_graph(_delaunay_graph);
@@ -97,3 +98,32 @@ void MehlhornGraph::bucket_sort(
         }
     }
 }
+
+void MehlhornGraph::kruskal_on_mehlhorn_edges() {
+    std::vector<EdgeId> edge_ids(_mehlhorn_edges.size());
+    std::iota(edge_ids.begin(), edge_ids.end(), 0);
+
+    std::vector<Edge> included_edges;
+
+    auto id_to_edge_projection = [this](auto const edge_id) { return _mehlhorn_edges[edge_id]; };
+
+    std::sort(edge_ids.begin(), edge_ids.end(),
+              [&id_to_edge_projection](EdgeId a, EdgeId b) {
+                  return (id_to_edge_projection(a) < id_to_edge_projection(b));
+              });
+    Disjoint_Set disjoint_set;
+    disjoint_set.make_sets(_delaunay_graph.num_nodes());
+    for (auto edge_id: edge_ids) {
+        auto const &edge = id_to_edge_projection(edge_id);
+
+        if (!disjoint_set.set_equals(edge.head, edge.tail)) {
+            // unite the sets of the parents of the nodes of edge
+            disjoint_set.unite(edge.head, edge.tail);
+            // add edge to the vector of included edges
+            included_edges.push_back(edge);
+        }
+    }
+    _mehlhorn_edges = included_edges;
+}
+
+bool MehlhornGraph::Edge::operator<(const MehlhornGraph::Edge &other) const { return length < other.length; }

@@ -10,25 +10,10 @@
 #include <cassert>
 #include <complex>
 
-void DelaunayGraph::add_node(GridUnit x_coord, GridUnit y_coord, NodeId node_id) {
-    _nodes.emplace_back(x_coord, y_coord, _nodes.size(), node_id);
-    _max_x = std::max(_max_x, std::abs(x_coord));
-    _max_y = std::max(_max_y, std::abs(y_coord));
-    _orig_max_x = _max_x;
-    _orig_max_y = _max_y;
-}
-
-void DelaunayGraph::add_terminal(GridUnit x_coord, GridUnit y_coord, NodeId node_id) {
-    if (_nodes.size() == _num_terminals) {
-        _nodes.emplace_back(x_coord, y_coord, _nodes.size(), node_id);
-    } else {
-        _nodes.emplace(_nodes.begin() + _num_terminals, x_coord, y_coord, _nodes.size(), node_id);
-    }
-    _num_terminals += 1;
-}
 
 void DelaunayGraph::calculate_l1_delaunay_triangulation() {
     translate_from_1_to_infty_norm();
+    _edges.clear();
 
     DelaunayPriorityQueue X(_max_x, _max_y);
     for (auto const &terminal: _nodes) {
@@ -83,24 +68,6 @@ void DelaunayGraph::update_inactivation_records(DelaunayPriorityQueue &X, const 
     }
 }
 
-Graph DelaunayGraph::export_graph() {
-    NodeId sqrt = std::max(_orig_max_x, _orig_max_y) + 1;
-    NodeId num_nodes = sqrt * sqrt;
-    std::vector<NodeId> terminals;
-    for (auto const &terminal: _nodes) {
-        terminals.push_back(terminal.x_coord + terminal.y_coord * sqrt);
-    }
-    Graph ret{num_nodes, terminals};
-    for (auto const &edge: _edges) {
-        ret.add_edge({
-                             edge.node_a.x_coord + edge.node_a.y_coord * sqrt,
-                             edge.node_b.x_coord + edge.node_b.y_coord * sqrt,
-                             edge.node_a.distance(edge.node_b)
-                     });
-    }
-
-    return ret;
-}
 
 void DelaunayGraph::translate_terminal_from_1_to_infty_norm(DelaunayGraph::Node &t) {
     GridUnit new_x = t.x_coord + t.y_coord;
@@ -138,68 +105,6 @@ void DelaunayGraph::translate_from_infty_to_1_norm() {
     }
 }
 
-[[maybe_unused]] void DelaunayGraph::print_as_postscript(std::ostream &os, const std::string &base_file_name) {
-    std::ifstream base_file(base_file_name);
-    assert(base_file);
-    std::string line;
-
-    os << base_file.rdbuf();
-    base_file.close();
-
-    auto grid_width = static_cast<GridUnit>(std::sqrt(std::max(_orig_max_x, _orig_max_y)));
-
-    os << std::endl;
-    os << "%%BeginSetup" << std::endl << std::endl;
-    os << 0 << " " << (grid_width + 1) * (grid_width + 1) << " " << 0 << " " << (grid_width + 1) * (grid_width + 1)
-       << " SetAxes"
-       <<
-       std::endl <<
-       std::endl;
-
-    os << _nodes.size() << " DefineTerminals" << std::endl;
-    for (auto terminal: _nodes) {
-        os << "\t" << terminal.x_coord + 1 << "\t" << terminal.y_coord + 1 << "\tDT" << std::endl;
-    }
-
-    os << std::endl << "%%EndSetup" << std::endl << std::endl;
-
-    os << "%%Page: 1 1" << std::endl;
-    os << "BeginPlot" << std::endl;
-    os << "\tPlot_Terminals" << std::endl;
-    for (auto const &edge: _edges) {
-        os << "\t" << edge.node_a.x_coord + 1
-           << "\t" << edge.node_a.y_coord + 1
-           << "\t" << edge.node_b.x_coord + 1
-           << "\t" << edge.node_b.y_coord + 1 << "\tS" << std::endl;
-    }
-
-    //os << "  (Steiner Minimal Tree: " << _terminals.size() << "points, length=" << grid_width * grid_widht << ")" <<
-    //std::endl;
-    os << "EndPlot" << std::endl;
-}
-
-const std::vector<DelaunayGraph::Node> &DelaunayGraph::nodes() const { return _nodes; }
-
-EdgeId DelaunayGraph::num_edges() const { return static_cast<EdgeId>(_edges.size()); }
-
-const std::vector<DelaunayGraph::Edge> &DelaunayGraph::edges() const { return _edges; }
-
-NodeId DelaunayGraph::num_nodes() const { return static_cast<NodeId>(_nodes.size()); }
-
-void DelaunayGraph::add_edge(DelaunayGraph::Node terminal_a, DelaunayGraph::Node terminal_b) {
-    _edges.push_back({terminal_a, terminal_b});
-}
-
-DelaunayGraph::DelaunayGraph(std::vector<Node> terminals) :
-        _max_x(0), _max_y(0), _orig_max_x(0), _orig_max_y(0), _nodes(std::move(terminals)) {
-    for (auto const &terminal: _nodes) {
-        _max_x = std::max(std::abs(terminal.x_coord), _max_x);
-        _max_y = std::max(std::abs(terminal.y_coord), _max_y);
-        _orig_max_x = _max_x;
-        _orig_max_y = _max_y;
-    }
-    _num_terminals = static_cast<NodeId>(_nodes.size());
-}
 
 void DelaunayGraph::add_steiner_points() {
     std::vector<std::vector<Edge>> edges_by_node_id(num_nodes());
@@ -235,9 +140,6 @@ void DelaunayGraph::add_steiner_points() {
     }
 }
 
-NodeId DelaunayGraph::num_terminals() const { return _num_terminals; }
-
-bool DelaunayGraph::is_terminal_id(NodeId node_id) const { return node_id < num_terminals(); }
 
 bool DelaunayGraph::Node::operator==(const DelaunayGraph::Node &other) const {
     return x_coord == other.x_coord and y_coord == other.y_coord;

@@ -34,7 +34,7 @@ Graph kruskal(const Graph &input_graph) {
 }
 
 DelaunayGraph kruskal(DelaunayGraph const &delaunay_graph) {
-    DelaunayGraph return_graph(delaunay_graph.nodes());
+    DelaunayGraph return_graph(delaunay_graph.nodes(), delaunay_graph.num_terminals());
     std::vector<EdgeId> edge_ids(delaunay_graph.num_edges());
     std::iota(edge_ids.begin(), edge_ids.end(), 0);
 

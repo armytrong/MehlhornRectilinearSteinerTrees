@@ -10,49 +10,51 @@
 #include "kruskal/disjoint_set_2.h"
 
 void MehlhornGraph::calculate_mehlhorn_graph() {
-    DijkstraGraph dijkstra_graph(_delaunay_graph);
-    std::vector<NodeId> terminals(_delaunay_graph.num_terminals());
+    DijkstraGraph dijkstra_graph(_coordinate_graph);
+    std::vector<NodeId> terminals(_coordinate_graph.num_terminals());
     std::iota(terminals.begin(), terminals.end(), 0);
     NodeId root_node = dijkstra_graph.add_node(terminals, std::vector<WeightType>(terminals.size(), 0));
     dijkstra_graph.dijkstras_algorithm(root_node);
 
     std::vector<Edge> candidate_mehlhorn_edges;
-    for (auto const &edge: _delaunay_graph.edges()) {
+    for (auto const &edge: _coordinate_graph.edges()) {
         NodeId terminal_1 = dijkstra_graph[edge.node_a.internal_id].closest_terminal;
         NodeId terminal_2 = dijkstra_graph[edge.node_b.internal_id].closest_terminal;
         WeightType length = dijkstra_graph[edge.node_a.internal_id].distance_to_root + edge.length() +
                             dijkstra_graph[edge.node_b.internal_id].distance_to_root;
-        assert(terminal_1 != terminal_2);
-        candidate_mehlhorn_edges.push_back({terminal_1, terminal_2, length});
-        auto &candidate_edge = candidate_mehlhorn_edges.back();
+        if (terminal_1 != terminal_2) {
+            candidate_mehlhorn_edges.push_back({terminal_1, terminal_2, length});
+            auto &candidate_edge = candidate_mehlhorn_edges.back();
 
-        add_path_to_edge(dijkstra_graph, edge, candidate_edge);
+            add_path_to_edge(dijkstra_graph, edge, candidate_edge);
+        }
 
     }
 
     bucket_sort(
             candidate_mehlhorn_edges,
             [](Edge const &edge) { return edge.smaller_node(); },
-            _delaunay_graph.num_nodes()
+            _coordinate_graph.num_nodes()
     );
 
     bucket_sort(
             candidate_mehlhorn_edges,
             [](Edge const &edge) { return edge.larger_node(); },
-            _delaunay_graph.num_nodes()
+            _coordinate_graph.num_nodes()
     );
 
     std::optional<Edge> current_mincost_edge = std::nullopt;
 
     for (auto const &candidate_edge: candidate_mehlhorn_edges) {
-        if (not current_mincost_edge.has_value()
-            or current_mincost_edge->length > candidate_edge.length) {
+        if (not current_mincost_edge.has_value()) {
             current_mincost_edge = candidate_edge;
         } else if (not(
                 current_mincost_edge->larger_node() == candidate_edge.larger_node() and
                 current_mincost_edge->smaller_node() == candidate_edge.smaller_node()
         )) {
             _mehlhorn_edges.push_back(*current_mincost_edge);
+            current_mincost_edge = candidate_edge;
+        } else if (current_mincost_edge->length > candidate_edge.length) {
             current_mincost_edge = candidate_edge;
         }
     }
@@ -65,7 +67,7 @@ void MehlhornGraph::add_path_to_edge(
         MehlhornGraph::Edge &candidate_edge) const {
     std::vector<NodeId> &path_to_node_a = candidate_edge.path;
     NodeId node_i = edge.node_a.internal_id;
-    while (not _delaunay_graph.is_terminal_id(node_i)) {
+    while (not _coordinate_graph.is_terminal_id(node_i)) {
         path_to_node_a.push_back(node_i);
         node_i = dijkstra_graph.predecessor(node_i);
     }
@@ -74,7 +76,7 @@ void MehlhornGraph::add_path_to_edge(
 
     std::vector<NodeId> path_to_node_b;
     node_i = edge.node_b.internal_id;
-    while (not _delaunay_graph.is_terminal_id(node_i)) {
+    while (not _coordinate_graph.is_terminal_id(node_i)) {
         path_to_node_a.push_back(node_i);
         node_i = dijkstra_graph.predecessor(node_i);
     }
@@ -112,7 +114,7 @@ void MehlhornGraph::kruskal_on_mehlhorn_edges() {
                   return (id_to_edge_projection(a) < id_to_edge_projection(b));
               });
     Disjoint_Set disjoint_set;
-    disjoint_set.make_sets(_delaunay_graph.num_nodes());
+    disjoint_set.make_sets(_coordinate_graph.num_nodes());
     for (auto edge_id: edge_ids) {
         auto const &edge = id_to_edge_projection(edge_id);
 
@@ -124,6 +126,19 @@ void MehlhornGraph::kruskal_on_mehlhorn_edges() {
         }
     }
     _mehlhorn_edges = included_edges;
+}
+
+CoordinateGraph MehlhornGraph::reconstruct_coord_graph_from_mehlhorn_edges() const {
+    auto const &nodes = _coordinate_graph.nodes();
+    CoordinateGraph ret_graph(nodes, _coordinate_graph.num_terminals());
+
+    for (auto const &edge: _mehlhorn_edges) {
+        for (int i = 1; i < edge.path.size(); i++) {
+            ret_graph.add_edge(nodes[edge.path[i - 1]], nodes[edge.path[i]]);
+        }
+    }
+
+    return ret_graph;
 }
 
 bool MehlhornGraph::Edge::operator<(const MehlhornGraph::Edge &other) const { return length < other.length; }

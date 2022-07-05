@@ -185,9 +185,9 @@ DelaunayGraph STPFileParser::create_delaunay_graph() {
     }
     for (auto terminal_id: _terminals) {
         if (_node_coords.empty()) {
-            delaunay_graph.add_node(terminal_id % sqrt, static_cast<GridUnit>(terminal_id / sqrt));
+            delaunay_graph.add_terminal(terminal_id % sqrt, static_cast<GridUnit>(terminal_id / sqrt));
         } else {
-            delaunay_graph.add_node(_node_coords[terminal_id].x, _node_coords[terminal_id].y);
+            delaunay_graph.add_terminal(_node_coords[terminal_id].x, _node_coords[terminal_id].y);
         }
     }
     return delaunay_graph;

@@ -24,11 +24,13 @@ public:
         [[nodiscard]] bool operator<(Edge const &other) const;
     };
 
-    explicit MehlhornGraph(DelaunayGraph const &delaunay_graph) : _delaunay_graph(delaunay_graph) {}
+    explicit MehlhornGraph(CoordinateGraph const &coordinate_graph) : _coordinate_graph(coordinate_graph) {}
 
     void calculate_mehlhorn_graph();
 
     void kruskal_on_mehlhorn_edges();
+
+    [[nodiscard]] CoordinateGraph reconstruct_coord_graph_from_mehlhorn_edges() const;
 
 private:
 
@@ -38,7 +40,7 @@ private:
     static void
     bucket_sort(std::vector<Edge> &vector, TypeToNodeId<Edge> type_to_node_id, NodeId max_id);
 
-    DelaunayGraph const &_delaunay_graph;
+    CoordinateGraph const &_coordinate_graph;
     std::vector<Edge> _mehlhorn_edges;
     void
     add_path_to_edge(const DijkstraGraph &dijkstra_graph, const DelaunayGraph::Edge &edge, Edge &candidate_edge) const;

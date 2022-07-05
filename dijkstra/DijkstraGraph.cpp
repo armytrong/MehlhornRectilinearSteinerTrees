@@ -26,13 +26,13 @@ DijkstraGraph::DijkstraGraph(Graph const &graph) : _calculation_finished(false) 
     }
 }
 
-DijkstraGraph::DijkstraGraph(const DelaunayGraph &delaunay_graph) {
-    _nodes = std::vector<Node>(delaunay_graph.num_nodes());
+DijkstraGraph::DijkstraGraph(const CoordinateGraph &coordinate_graph) : _calculation_finished(false) {
+    _nodes = std::vector<Node>(coordinate_graph.num_nodes());
     for (size_t i = 0; i < _nodes.size(); i++) {
         _nodes[i]._id = static_cast<NodeId>(i);
     }
 
-    for (auto const &edge: delaunay_graph.edges()) {
+    for (auto const &edge: coordinate_graph.edges()) {
         _nodes[edge.node_a.internal_id].neighbours.push_back(edge.node_b.internal_id);
         _nodes[edge.node_a.internal_id].weights.push_back(edge.length());
 
@@ -47,7 +47,7 @@ const DijkstraGraph::Node &DijkstraGraph::operator[](NodeId index) const {
 
 void DijkstraGraph::dijkstras_algorithm(NodeId root_node_id) {
 
-    assert(root_node_id >= _nodes.size() && "Root node must be in graph.");
+    assert(root_node_id < _nodes.size() && "Root node must be in graph.");
 
     Node &root_node = _nodes[root_node_id];
 

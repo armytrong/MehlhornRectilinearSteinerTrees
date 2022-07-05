@@ -25,7 +25,7 @@ public:
 
 
     explicit DijkstraGraph(Graph const &graph);
-    explicit DijkstraGraph(DelaunayGraph const &delaunay_graph);
+    explicit DijkstraGraph(CoordinateGraph const &coordinate_graph);
 
     Node &operator[](NodeId index);
 

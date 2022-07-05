@@ -28,35 +28,42 @@ int main(int argc, char *argv[]) {
     delaunay_graph.calculate_l1_delaunay_triangulation();
     print_verbose("Delaunay triangulation complete.");
 
+
     MehlhornGraph mehlhorn_graph(delaunay_graph);
     mehlhorn_graph.calculate_mehlhorn_graph();
     print_verbose("Mehlhorn Graph calculated.");
-
+//    std::ofstream file("Output/output.ps");
+//    delaunay_graph.print_as_postscript(file, "PostScript/template.ps");
+//    file.close();
     mehlhorn_graph.kruskal_on_mehlhorn_edges();
     print_verbose("first kruskal complete");
 
-    RectilinearGraph rect_graph(kruskal_graph.export_graph());
-    print_verbose("constructed rectiliear graph");
-
-    auto graph2 = rect_graph.export_graph();
-    auto kruskal_graph2 = kruskal(graph2);
-    print_verbose("second kruskal complete");
-
-    std::cout << std::endl;
-
-    std::ofstream file(parms.output_filename);
-    std::ostream &ostream = (parms.output_filename.empty() or not file) ? std::cout : file;
-    if (not file and not parms.output_filename.empty()) {
-        std::cerr << "unable to open output file, falling back to standard output" << std::endl;
-    }
-
-    if (parms.output_format == OutputFormat::STP) {
-        kruskal_graph2.print_graph(ostream);
-    } else if (parms.output_format == OutputFormat::PS) {
-        RectilinearGraph output_graph(kruskal_graph2);
-        output_graph.print_as_postscript(ostream, "PostScript/template.ps");
-    }
+    auto coordinate_graph = mehlhorn_graph.reconstruct_coord_graph_from_mehlhorn_edges();
+    std::ofstream file("Output/output.ps");
+    coordinate_graph.print_as_postscript(file, "PostScript/template.ps");
     file.close();
+//    RectilinearGraph rect_graph(kruskal_graph.export_graph());
+//    print_verbose("constructed rectiliear graph");
+//
+//    auto graph2 = rect_graph.export_graph();
+//    auto kruskal_graph2 = kruskal(graph2);
+//    print_verbose("second kruskal complete");
+//
+//    std::cout << std::endl;
+//
+//    std::ofstream file(parms.output_filename);
+//    std::ostream &ostream = (parms.output_filename.empty() or not file) ? std::cout : file;
+//    if (not file and not parms.output_filename.empty()) {
+//        std::cerr << "unable to open output file, falling back to standard output" << std::endl;
+//    }
+//
+//    if (parms.output_format == OutputFormat::STP) {
+//        kruskal_graph2.print_graph(ostream);
+//    } else if (parms.output_format == OutputFormat::PS) {
+//        RectilinearGraph output_graph(kruskal_graph2);
+//        output_graph.print_as_postscript(ostream, "PostScript/template.ps");
+//    }
+//    file.close();
 
 
     return 0;

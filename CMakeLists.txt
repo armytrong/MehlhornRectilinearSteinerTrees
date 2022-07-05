@@ -32,4 +32,4 @@ add_executable(Hauptaufgabe_2
         delaunay/DelaunayPriorityQueue.cpp
         delaunay/DelaunayPriorityQueue.h
         ArgumentHandler.cpp
-        ArgumentHandler.h mehlhorn/MehlhornGraph.cpp mehlhorn/MehlhornGraph.h)
+        ArgumentHandler.h mehlhorn/MehlhornGraph.cpp mehlhorn/MehlhornGraph.h graph/CoordinateGraph.cpp graph/CoordinateGraph.h)

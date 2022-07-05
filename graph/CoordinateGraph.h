@@ -50,11 +50,16 @@ public:
 
     [[nodiscard]] bool is_terminal_id(NodeId node_id) const;
 
-    void add_node(GridUnit x_coord, GridUnit y_coord);
+    Node add_node(GridUnit x_coord, GridUnit y_coord);
     void add_terminal(GridUnit x_coord, GridUnit y_coord);
     void add_edge(Node node_a, Node node_b);
 
+    void kruskal();
+    void l_shape_flipping();
+    void reduce_nodes();
 protected:
+    static GridUnit mid(GridUnit a, GridUnit b, GridUnit c);
+
     std::vector<Node> _nodes;
     std::vector<Edge> _edges;
     GridUnit _max_x, _max_y, _orig_max_x, _orig_max_y;

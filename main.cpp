@@ -39,6 +39,14 @@ int main(int argc, char *argv[]) {
     print_verbose("first kruskal complete");
 
     auto coordinate_graph = mehlhorn_graph.reconstruct_coord_graph_from_mehlhorn_edges();
+    coordinate_graph.kruskal();
+    print_verbose("second kruskal complete");
+
+    coordinate_graph.l_shape_flipping();
+    print_verbose("l-shape-flipping complete");
+
+    coordinate_graph.reduce_nodes();
+
     std::ofstream file("Output/output.ps");
     coordinate_graph.print_as_postscript(file, "PostScript/template.ps");
     file.close();

@@ -160,7 +160,7 @@ void STPFileParser::read_coordinates_from_file(std::istream &file, bool nodes_ar
             if (nodes_are_terminals) {
                 _terminals.push_back((y_coord /* -1 */) * 10000 + x_coord /* -1 */ );
             } else {
-                _node_coords[node_id] = {x_coord, y_coord};
+                _node_coords[node_id - 1] = {x_coord, y_coord};
             }
         }
     }
@@ -172,7 +172,7 @@ void STPFileParser::read_coordinates_from_file(std::istream &file, bool nodes_ar
 }
 
 inline void STPFileParser::remove_carriage_return(std::string &s) {
-    while (s[s.size() - 1] == '\r') {
+    while (not s.empty() and s[s.size() - 1] == '\r') {
         s = s.erase(s.size() - 1);
     }
 }

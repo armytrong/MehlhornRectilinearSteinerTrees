@@ -7,7 +7,7 @@
 #include <optional>
 #include "MehlhornGraph.h"
 #include "dijkstra/DijkstraGraph.h"
-#include "kruskal/disjoint_set_2.h"
+#include "kruskal/DisjointSet.h"
 
 void MehlhornGraph::calculate_mehlhorn_graph() {
     DijkstraGraph dijkstra_graph(_coordinate_graph);
@@ -113,7 +113,7 @@ void MehlhornGraph::kruskal_on_mehlhorn_edges() {
               [&id_to_edge_projection](EdgeId a, EdgeId b) {
                   return (id_to_edge_projection(a) < id_to_edge_projection(b));
               });
-    Disjoint_Set disjoint_set;
+    DisjointSet disjoint_set;
     disjoint_set.make_sets(_coordinate_graph.num_nodes());
     for (auto edge_id: edge_ids) {
         auto const &edge = id_to_edge_projection(edge_id);

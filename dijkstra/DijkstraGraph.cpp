@@ -14,7 +14,7 @@
 DijkstraGraph::DijkstraGraph(Graph const &graph) : _calculation_finished(false) {
     _nodes = std::vector<Node>(graph.num_nodes());
     for (size_t i = 0; i < _nodes.size(); i++) {
-        _nodes[i]._id = static_cast<NodeId>(i);
+        _nodes[i].id = static_cast<NodeId>(i);
     }
 
     for (auto const &edge: graph.edges()) {
@@ -29,7 +29,7 @@ DijkstraGraph::DijkstraGraph(Graph const &graph) : _calculation_finished(false) 
 DijkstraGraph::DijkstraGraph(const CoordinateGraph &coordinate_graph) : _calculation_finished(false) {
     _nodes = std::vector<Node>(coordinate_graph.num_nodes());
     for (size_t i = 0; i < _nodes.size(); i++) {
-        _nodes[i]._id = static_cast<NodeId>(i);
+        _nodes[i].id = static_cast<NodeId>(i);
     }
 
     for (auto const &edge: coordinate_graph.edges()) {
@@ -52,9 +52,9 @@ void DijkstraGraph::dijkstras_algorithm(NodeId root_node_id) {
     Node &root_node = _nodes[root_node_id];
 
     for (auto &node: _nodes) {
-        node.closest_terminal = -1;
-        node.distance_to_root = -1;
-        node.predecessor = -1;
+        node.closest_terminal = INVALID_NODE;
+        node.distance_to_root = INVALID_WEIGHT;
+        node.predecessor = INVALID_NODE;
     }
 
     StandardHeap candidates;
@@ -77,7 +77,7 @@ void DijkstraGraph::dijkstras_algorithm(NodeId root_node_id) {
 
             Node &node_w = _nodes[node_w_id];
 
-            if (node_w.distance_to_root == -1) {
+            if (node_w.distance_to_root == INVALID_WEIGHT) {
 
                 node_w.predecessor = node_v_id;
                 node_w.distance_to_root = node_v.distance_to_root + edge_weight;
@@ -126,9 +126,9 @@ void DijkstraGraph::dijkstras_algorithm(NodeId root_node_id) {
     std::vector<NodeId> terminals;
 
     for (auto const &node: _nodes) {
-        if (node.predecessor != -1) {
+        if (node.predecessor != INVALID_NODE) {
             WeightType edge_weight = node.distance_to_root - _nodes[node.predecessor].distance_to_root;
-            edges.emplace_back(static_cast<NodeId>(node._id), static_cast<NodeId>(node.predecessor),
+            edges.emplace_back(static_cast<NodeId>(node.id), static_cast<NodeId>(node.predecessor),
                                edge_weight);
         }
     }

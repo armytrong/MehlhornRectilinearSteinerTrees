@@ -23,8 +23,9 @@ int main(int argc, char *argv[]) {
 
 
     auto print_verbose = [& parms](std::string const &s) {
-        if (parms.verbose)
+        if (parms.verbose) {
             std::cout << "[Verbose]: " << s << std::endl;
+        }
     };
 
 

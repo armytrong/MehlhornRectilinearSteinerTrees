@@ -10,23 +10,23 @@
 
 class DelaunaySet {
 public:
-    using Terminal = DelaunayGraph::Node;
+    using Node = DelaunayGraph::Node;
 
-    void insert(Terminal const &t);
-    void del(Terminal const &t);
-    [[nodiscard]] std::optional<DelaunaySet::Terminal> successor(Terminal const &t) const;
-    [[nodiscard]] std::optional<DelaunaySet::Terminal> predecessor(Terminal const &t) const;
+    void insert(Node const &node);
+    void erase(Node const &node);
+    [[nodiscard]] std::optional<DelaunaySet::Node> successor(Node const &node) const;
+    [[nodiscard]] std::optional<DelaunaySet::Node> predecessor(Node const &node) const;
 
 private:
-    static constexpr auto less_fun = [](Terminal const &lhs, Terminal const &rhs) {
+    static constexpr auto less_fun = [](Node const &lhs, Node const &rhs) {
         return (lhs.y_coord < rhs.y_coord) or (rhs.y_coord == lhs.y_coord and rhs.x_coord < lhs.x_coord);
     };
-    static constexpr auto greater_fun = [](Terminal const &lhs, Terminal const &rhs) {
+    static constexpr auto greater_fun = [](Node const &lhs, Node const &rhs) {
         return (lhs.y_coord > rhs.y_coord) or (rhs.y_coord == lhs.y_coord and rhs.x_coord > lhs.x_coord);
     };
 
-    std::set<Terminal, decltype(less_fun)> _less_set;
-    std::set<Terminal, decltype(greater_fun)> _greater_set;
+    std::set<Node, decltype(less_fun)> _less_set;
+    std::set<Node, decltype(greater_fun)> _greater_set;
 };
 
 

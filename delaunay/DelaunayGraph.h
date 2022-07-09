@@ -38,7 +38,8 @@ public:
 
 private:
 
-    static void update_inactivation_records(DelaunayPriorityQueue &X, DelaunaySet const &Y, Node terminal);
+    static void
+    update_inactivation_records(DelaunayPriorityQueue &x_record_queue, DelaunaySet const &y_node_set, Node terminal);
 
     static void translate_terminal_from_1_to_infty_norm(Node &t);
 

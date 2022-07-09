@@ -12,7 +12,7 @@
 
 
 STPFileParser::STPFileParser(ArgumentHandler::Parms const &parms) :
-        _parms(parms), _num_nodes(-1), _num_terminals(-1) {}
+        _parms(parms), _num_nodes(INVALID_NODE), _num_terminals(INVALID_NODE) {}
 
 [[maybe_unused]] Graph STPFileParser::create_graph() {
     return {_num_nodes, _terminals, _edges};
@@ -134,8 +134,8 @@ inline std::istream &STPFileParser::safe_getline(std::istream &istream, std::str
 }
 
 bool STPFileParser::read_next_instance(std::istream &istream) {
-    _num_nodes = -1;
-    _num_terminals = -1;
+    _num_nodes = INVALID_NODE;
+    _num_terminals = INVALID_NODE;
     _terminals.clear();
     _edges.clear();
     _node_coords.clear();

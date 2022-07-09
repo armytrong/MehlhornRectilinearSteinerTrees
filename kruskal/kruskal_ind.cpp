@@ -1,7 +1,7 @@
 #include "kruskal_ind.h"
 #include <ranges>
 #include <numeric>
-#include "disjoint_set_2.h"
+#include "DisjointSet.h"
 #include "graph/Graph.h"
 #include "delaunay/DelaunayGraph.h"
 
@@ -17,7 +17,7 @@ Graph kruskal(const Graph &input_graph) {
               [&id_to_edge_projection](EdgeId a, EdgeId b) {
                   return (id_to_edge_projection(a) < id_to_edge_projection(b));
               });
-    Disjoint_Set disjoint_set;
+    DisjointSet disjoint_set;
     disjoint_set.make_sets(return_graph.num_nodes());
     for (auto edge_id: edge_ids) {
         auto const &edge = id_to_edge_projection(edge_id);
@@ -44,7 +44,7 @@ DelaunayGraph kruskal(DelaunayGraph const &delaunay_graph) {
               [&id_to_edge_projection](EdgeId a, EdgeId b) {
                   return (id_to_edge_projection(a) < id_to_edge_projection(b));
               });
-    Disjoint_Set set;
+    DisjointSet set;
     set.make_sets(return_graph.num_nodes());
     for (auto edge_id: edge_ids) {
         auto const &edge = id_to_edge_projection(edge_id);

@@ -12,7 +12,7 @@
 class CoordinateGraph {
 public:
     struct Node {
-        Node(GridUnit x_coord, GridUnit y_coord, NodeId internal_id = -1)
+        Node(GridUnit x_coord, GridUnit y_coord, NodeId internal_id = INVALID_NODE)
                 : x_coord(x_coord), y_coord(y_coord), internal_id(internal_id) {}
 
         GridUnit x_coord;

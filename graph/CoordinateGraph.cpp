@@ -3,7 +3,7 @@
 //
 
 #include "CoordinateGraph.h"
-#include "kruskal/disjoint_set_2.h"
+#include "kruskal/DisjointSet.h"
 #include "STPFileParser.h"
 #include <fstream>
 #include <valarray>
@@ -124,7 +124,7 @@ void CoordinateGraph::kruskal() {
               [&id_to_edge_projection](EdgeId a, EdgeId b) {
                   return (id_to_edge_projection(a) < id_to_edge_projection(b));
               });
-    Disjoint_Set set;
+    DisjointSet set;
     set.make_sets(num_nodes());
     for (auto edge_id: edge_ids) {
         auto const &edge = id_to_edge_projection(edge_id);
@@ -214,24 +214,24 @@ GridUnit CoordinateGraph::mid(GridUnit a, GridUnit b, GridUnit c) {
 
 void CoordinateGraph::reduce_nodes() {
     NodeId orig_num_nodes = num_nodes();
-    std::vector<NodeId> new_node_id(orig_num_nodes, -1);
+    std::vector<NodeId> new_node_id(orig_num_nodes, INVALID_NODE);
     std::iota(new_node_id.begin(), new_node_id.begin() + num_terminals(), 0);
     NodeId node_id_counter = num_terminals();
     for (auto &edge: _edges) {
-        if (new_node_id[edge.node_a.internal_id] == -1) {
+        if (new_node_id[edge.node_a.internal_id] == INVALID_NODE) {
             new_node_id[edge.node_a.internal_id] = node_id_counter;
             node_id_counter += 1;
         }
-        if (new_node_id[edge.node_b.internal_id] == -1) {
+        if (new_node_id[edge.node_b.internal_id] == INVALID_NODE) {
             new_node_id[edge.node_b.internal_id] = node_id_counter;
             node_id_counter += 1;
         }
         edge.node_a.internal_id = new_node_id[edge.node_a.internal_id];
         edge.node_b.internal_id = new_node_id[edge.node_b.internal_id];
     }
-    std::vector<Node> new_nodes(node_id_counter, {-1, -1, -1});
+    std::vector<Node> new_nodes(node_id_counter, {0, 0});
     for (int i = 0; i < new_node_id.size(); i++) {
-        if (new_node_id[i] != -1) {
+        if (new_node_id[i] != INVALID_NODE) {
             auto const &old_node = _nodes[i];
             new_nodes[new_node_id[i]] = {old_node.x_coord, old_node.y_coord, new_node_id[i]};
         }

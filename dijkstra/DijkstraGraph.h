@@ -15,12 +15,12 @@ class DijkstraGraph {
 public:
 
     struct Node {
-        NodeId _id = -1;
+        NodeId id = INVALID_NODE;
         std::vector<NodeId> neighbours;
         std::vector<WeightType> weights;
-        NodeId predecessor = -1;
-        NodeId closest_terminal = -1;
-        WeightType distance_to_root = -1;
+        NodeId predecessor = INVALID_NODE;
+        NodeId closest_terminal = INVALID_NODE;
+        WeightType distance_to_root = INVALID_WEIGHT;
     };
 
 

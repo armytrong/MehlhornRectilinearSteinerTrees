@@ -8,62 +8,69 @@
 #include "DelaunaySet.h"
 #include <fstream>
 #include <cassert>
-#include <complex>
 
 
 void DelaunayGraph::calculate_l1_delaunay_triangulation() {
     translate_from_1_to_infty_norm();
     _edges.clear();
 
-    DelaunayPriorityQueue X(_max_x, _max_y);
+    DelaunayPriorityQueue x_record_queue(_max_x, _max_y);
     for (auto const &terminal: _nodes) {
-        X.insert(terminal, terminal.x_coord, ACTIVE);
+        x_record_queue.insert(terminal, terminal.x_coord, ActiveInactive::ACTIVE);
     }
-    DelaunaySet Y;
-    Y.insert({-_max_x - 1, -_max_y - 1});
-    Y.insert({-_max_x - 1, _max_y + 1});
+    DelaunaySet y_node_set;
+    y_node_set.insert({-_max_x - 1, -_max_y - 1});
+    y_node_set.insert({-_max_x - 1, _max_y + 1});
 
     std::map<Node, int> ages;
     int age_counter = 0;
 
-    while (not X.empty()) {
-        auto P = X.extract_min();
-        ages.insert(std::make_pair(P.terminal, age_counter));
+    while (not x_record_queue.empty()) {
+        auto const minimum_record = x_record_queue.extract_min();
+        ages.insert(std::make_pair(minimum_record.terminal, age_counter));
         age_counter++;
-        if (P.status == ACTIVE) {
-            Y.insert(P.terminal);
-            auto successor = Y.successor(P.terminal);
-            auto predecessor = Y.predecessor((P.terminal));
+        if (minimum_record.status == ActiveInactive::ACTIVE) {
+            y_node_set.insert(minimum_record.terminal);
+            auto const successor = y_node_set.successor(minimum_record.terminal);
+            auto const predecessor = y_node_set.predecessor((minimum_record.terminal));
             assert(successor.has_value() and predecessor.has_value());
             if (successor->x_coord != -_max_x - 1) {
-                _edges.push_back({P.terminal, *successor});
-                update_inactivation_records(X, Y, ages[P.terminal] >= ages[*successor] ? *successor : P.terminal);
+                _edges.push_back({minimum_record.terminal, *successor});
+                update_inactivation_records(x_record_queue, y_node_set,
+                                            ages[minimum_record.terminal] >= ages[*successor] ? *successor
+                                                                                              : minimum_record.terminal);
             }
             if (predecessor->x_coord != -_max_x - 1) {
-                _edges.push_back({P.terminal, *predecessor});
-                update_inactivation_records(X, Y, ages[P.terminal] >= ages[*predecessor] ? *predecessor : P.terminal);
+                _edges.push_back({minimum_record.terminal, *predecessor});
+                update_inactivation_records(x_record_queue, y_node_set,
+                                            ages[minimum_record.terminal] >= ages[*predecessor] ? *predecessor
+                                                                                                : minimum_record.terminal);
             }
         } else {
-            auto q = Y.predecessor(P.terminal);
-            Y.del(P.terminal);
-            auto successor = Y.successor(*q);
-            if (q->x_coord != -_max_x - 1 and successor->x_coord != -_max_x - 1) _edges.push_back({*q, *successor});
-            update_inactivation_records(X, Y, ages[*q] >= ages[*successor] ? *successor : *q);
+            auto const predecessor = y_node_set.predecessor(minimum_record.terminal);
+            y_node_set.erase(minimum_record.terminal);
+            auto const successor = y_node_set.successor(*predecessor);
+            if (predecessor->x_coord != -_max_x - 1 and successor->x_coord != -_max_x - 1) {
+                _edges.push_back({*predecessor, *successor});
+            }
+            update_inactivation_records(x_record_queue, y_node_set,
+                                        ages[*predecessor] >= ages[*successor] ? *successor : *predecessor);
         }
     }
 
     translate_from_infty_to_1_norm();
 }
 
-void DelaunayGraph::update_inactivation_records(DelaunayPriorityQueue &X, const DelaunaySet &Y,
+void DelaunayGraph::update_inactivation_records(DelaunayPriorityQueue &x_record_queue, const DelaunaySet &y_node_set,
                                                 DelaunayGraph::Node terminal) {
-    auto r = Y.predecessor(terminal);
-    auto q = Y.successor(terminal);
-    if (r->x_coord > terminal.x_coord and q->x_coord >= terminal.x_coord) {
-        if (X.find_inactivation_record(terminal).has_value()) {
-            X.change_priority(terminal, terminal.x_coord + q->y_coord - r->y_coord);
+    auto predecessor = y_node_set.predecessor(terminal);
+    auto successor = y_node_set.successor(terminal);
+    if (predecessor->x_coord > terminal.x_coord and successor->x_coord >= terminal.x_coord) {
+        if (x_record_queue.find_inactivation_record(terminal).has_value()) {
+            x_record_queue.change_priority(terminal, terminal.x_coord + successor->y_coord - predecessor->y_coord);
         } else {
-            X.insert(terminal, terminal.x_coord + q->y_coord - r->y_coord, INACTIVE);
+            x_record_queue.insert(terminal, terminal.x_coord + successor->y_coord - predecessor->y_coord,
+                                  ActiveInactive::INACTIVE);
         }
     }
 }

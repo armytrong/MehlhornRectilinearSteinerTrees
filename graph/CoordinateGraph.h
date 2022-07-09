@@ -7,7 +7,6 @@
 
 
 #include "typedefs.h"
-#include "Graph.h"
 
 class CoordinateGraph {
 public:
@@ -39,7 +38,6 @@ public:
         [[nodiscard]] WeightType length() const;
     };
 
-    [[maybe_unused]] [[nodiscard]] Graph export_graph() const;
     [[maybe_unused]] void print_as_postscript(std::ostream &os, const std::string &base_file_name);
     void print_as_stp(std::ostream &os);
 

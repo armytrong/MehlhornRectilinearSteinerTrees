@@ -11,21 +11,6 @@
 #include <cassert>
 
 
-DijkstraGraph::DijkstraGraph(Graph const &graph) : _calculation_finished(false) {
-    _nodes = std::vector<Node>(graph.num_nodes());
-    for (size_t i = 0; i < _nodes.size(); i++) {
-        _nodes[i].id = static_cast<NodeId>(i);
-    }
-
-    for (auto const &edge: graph.edges()) {
-        _nodes[edge._head].neighbours.push_back(static_cast<NodeId>(edge._tail));
-        _nodes[edge._head].weights.push_back(edge._weight);
-
-        _nodes[edge._tail].neighbours.push_back(static_cast<NodeId>(edge._head));
-        _nodes[edge._tail].weights.push_back(edge._weight);
-    }
-}
-
 DijkstraGraph::DijkstraGraph(const CoordinateGraph &coordinate_graph) : _calculation_finished(false) {
     _nodes = std::vector<Node>(coordinate_graph.num_nodes());
     for (size_t i = 0; i < _nodes.size(); i++) {
@@ -119,21 +104,6 @@ void DijkstraGraph::dijkstras_algorithm(NodeId root_node_id) {
         }
     }
     _calculation_finished = true;
-}
-
-[[maybe_unused]] Graph DijkstraGraph::generate_output_graph() {
-    std::vector<Graph::Edge> edges;
-    std::vector<NodeId> terminals;
-
-    for (auto const &node: _nodes) {
-        if (node.predecessor != INVALID_NODE) {
-            WeightType edge_weight = node.distance_to_root - _nodes[node.predecessor].distance_to_root;
-            edges.emplace_back(static_cast<NodeId>(node.id), static_cast<NodeId>(node.predecessor),
-                               edge_weight);
-        }
-    }
-
-    return {static_cast<NodeId>(_nodes.size()), terminals, edges};
 }
 
 DijkstraGraph::Node &DijkstraGraph::operator[](NodeId index) {

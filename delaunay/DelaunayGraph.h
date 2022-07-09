@@ -9,7 +9,6 @@
 #include <ostream>
 #include <utility>
 #include "typedefs.h"
-#include "graph/Graph.h"
 #include "graph/CoordinateGraph.h"
 
 

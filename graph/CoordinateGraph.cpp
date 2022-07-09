@@ -21,24 +21,6 @@ CoordinateGraph::CoordinateGraph(std::vector<Node> nodes, NodeId num_terminals) 
     }
 }
 
-Graph CoordinateGraph::export_graph() const {
-    NodeId sqrt = std::max(_orig_max_x, _orig_max_y) + 1;
-    NodeId num_nodes = sqrt * sqrt;
-    std::vector<NodeId> terminals;
-    for (auto const &terminal: _nodes) {
-        terminals.push_back(terminal.x_coord + terminal.y_coord * sqrt);
-    }
-    Graph ret{num_nodes, terminals};
-    for (auto const &edge: _edges) {
-        ret.add_edge({
-                             edge.node_a.x_coord + edge.node_a.y_coord * sqrt,
-                             edge.node_b.x_coord + edge.node_b.y_coord * sqrt,
-                             edge.node_a.distance(edge.node_b)
-                     });
-    }
-    return ret;
-}
-
 void CoordinateGraph::print_as_postscript(std::ostream &os, const std::string &base_file_name) {
     std::ifstream base_file(base_file_name);
     assert(base_file);

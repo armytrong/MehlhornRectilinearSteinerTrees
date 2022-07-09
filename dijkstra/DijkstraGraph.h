@@ -8,7 +8,6 @@
 #include <iostream>
 #include <vector>
 #include "typedefs.h"
-#include "graph/Graph.h"
 #include "delaunay/DelaunayGraph.h"
 
 class DijkstraGraph {
@@ -24,7 +23,6 @@ public:
     };
 
 
-    explicit DijkstraGraph(Graph const &graph);
     explicit DijkstraGraph(CoordinateGraph const &coordinate_graph);
 
     Node &operator[](NodeId index);
@@ -34,8 +32,6 @@ public:
     void dijkstras_algorithm(NodeId root_node_id);
 
     NodeId add_node(std::vector<NodeId> neighbours, std::vector<WeightType> weights);
-
-    [[maybe_unused]] Graph generate_output_graph();
 
     [[nodiscard]] bool calculation_finished() const;
 

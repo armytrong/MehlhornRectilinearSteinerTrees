@@ -12,18 +12,11 @@ add_executable(Hauptaufgabe_2
         STPFileParser.cpp STPFileParser.h
         dijkstra/DijkstraGraph.cpp
         dijkstra/DijkstraGraph.h
-        graph/Graph.cpp graph/Graph.h
         heap/FibonacciHeap.cpp
         heap/FibonacciHeap.h
         typedefs.h
-        MehlhornGraphFactory.cpp
-        MehlhornGraphFactory.h
-        kruskal/kruskal_ind.cpp
-        kruskal/kruskal_ind.h
         heap/StandardHeap.cpp
         heap/StandardHeap.h
-        graph/RectilinearGraph.cpp
-        graph/RectilinearGraph.h
         heap/BinaryHeap.cpp
         heap/BinaryHeap.h
         heap/Heap.h

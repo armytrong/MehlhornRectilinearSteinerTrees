@@ -7,7 +7,6 @@
 
 
 #include <string>
-#include "graph/Graph.h"
 #include "delaunay/DelaunayGraph.h"
 #include "ArgumentHandler.h"
 
@@ -19,8 +18,6 @@ public:
     explicit STPFileParser(ArgumentHandler::Parms const &parms);
 
     bool read_next_instance(std::istream &istream);
-
-    [[maybe_unused]] Graph create_graph();
 
     DelaunayGraph create_delaunay_graph();
 
@@ -41,7 +38,6 @@ private:
     NodeId _num_nodes;
     NodeId _num_terminals;
     std::vector<NodeId> _terminals;
-    std::vector<Graph::Edge> _edges;
     std::vector<Coord> _node_coords;
 
 };

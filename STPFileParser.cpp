@@ -14,10 +14,6 @@
 STPFileParser::STPFileParser(ArgumentHandler::Parms const &parms) :
         _parms(parms), _num_nodes(INVALID_NODE), _num_terminals(INVALID_NODE) {}
 
-[[maybe_unused]] Graph STPFileParser::create_graph() {
-    return {_num_nodes, _terminals, _edges};
-}
-
 void STPFileParser::read_graph_from_file(std::istream &file) {
     std::string line;
     std::string specifier;
@@ -33,19 +29,9 @@ void STPFileParser::read_graph_from_file(std::istream &file) {
         if (specifier == "Nodes") {
             _num_nodes = val_1;
         } else if (specifier == "Edges") {
-            _edges.reserve(val_1);
             num_edges = val_1;
         } else if (specifier == "E") {
-            if (val_1 < 1 or val_1 > _num_nodes or val_2 < 1 or val_2 > _num_nodes) {
-                throw std::invalid_argument("Invalid file foramt: Invalid edge.");
-            }
-            // TODO Hier sollte man auch gegen values die trotzdem 0 sind guarden
-            // subtract 1 from original_node_id, this program is 0-based
-            _edges.emplace_back(val_1 - 1, val_2 - 1, val_3);
         }
-    }
-    if ((size_t) num_edges != _edges.size()) {
-        throw std::invalid_argument("Invalid file format: Wrong number of edges.");
     }
 }
 
@@ -137,7 +123,6 @@ bool STPFileParser::read_next_instance(std::istream &istream) {
     _num_nodes = INVALID_NODE;
     _num_terminals = INVALID_NODE;
     _terminals.clear();
-    _edges.clear();
     _node_coords.clear();
 
     // skip the required number of instances in the input

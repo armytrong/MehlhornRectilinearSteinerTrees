@@ -15,6 +15,10 @@ using EdgeId = int;
 using GridUnit = int;
 using WeightType = int;
 
+constexpr NodeId INVALID_NODE = -1;
+constexpr WeightType INVALID_WEIGHT = -1;
+
+
 struct Coord {
     GridUnit x;
     GridUnit y;

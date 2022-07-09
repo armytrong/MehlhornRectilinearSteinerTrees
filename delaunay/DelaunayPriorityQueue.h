@@ -9,7 +9,7 @@
 #include <set>
 #include "DelaunayGraph.h"
 
-enum ActiveInactive {
+enum class ActiveInactive {
     INACTIVE, ACTIVE
 };
 
@@ -17,9 +17,9 @@ enum ActiveInactive {
 class DelaunayPriorityQueue {
 public:
     DelaunayPriorityQueue(GridUnit max_x, GridUnit max_y) : MINIMUM_RECORD(
-            {{-max_x - 1, -max_y - 1}, -max_x - max_y - 1, INACTIVE}) {}
+            {{-max_x - 1, -max_y - 1}, -max_x - max_y - 1, ActiveInactive::INACTIVE}) {}
 
-    using Terminal = DelaunayGraph::Terminal;
+    using Terminal = DelaunayGraph::Node;
     struct Record {
         Terminal terminal;
         GridUnit trans;

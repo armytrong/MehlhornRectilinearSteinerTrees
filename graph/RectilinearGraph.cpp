@@ -39,11 +39,11 @@ void RectilinearGraph::add_any_edge(NodeId node_a, NodeId node_b, bool flipped) 
 
     while (node_a % _grid_width < node_b % _grid_width) {
         _horizontal_edges_after_node[node_a] = true;
-        node_a += 1;
+        node_a++;
     }
     while (node_a % _grid_width > node_b % _grid_width) {
         _horizontal_edges_after_node[node_b] = true;
-        node_b += 1;
+        node_b++;
     }
 
     if (not flipped) {
@@ -59,7 +59,8 @@ std::optional<EdgeId> RectilinearGraph::get_horizontal_connecting_edge(NodeId no
 
     if (node_b - node_a == 1 and (node_a + 1) % _grid_width == 0) {
         return static_cast<EdgeId>(node_a);
-    } else return std::nullopt;
+    }
+    return std::nullopt;
 }
 
 std::optional<EdgeId> RectilinearGraph::get_vertical_connecting_edge(NodeId node_a, NodeId node_b) const {
@@ -67,7 +68,8 @@ std::optional<EdgeId> RectilinearGraph::get_vertical_connecting_edge(NodeId node
 
     if (node_a % _grid_width == node_b % _grid_width) {
         return static_cast<EdgeId>(node_a);
-    } else return std::nullopt;
+    }
+    return std::nullopt;
 }
 
 

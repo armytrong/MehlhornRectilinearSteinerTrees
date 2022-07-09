@@ -24,6 +24,7 @@ public:
         size_t instances_to_skip;
         bool nodes_are_terminals;
         bool verbose;
+        bool output;
         bool run;
     };
 

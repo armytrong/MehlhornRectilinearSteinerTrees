@@ -8,12 +8,13 @@
 #include "../heap/FibonacciHeap.h"
 #include "../heap/StandardHeap.h"
 #include <map>
+#include <cassert>
 
 
 DijkstraGraph::DijkstraGraph(Graph const &graph) : _calculation_finished(false) {
     _nodes = std::vector<Node>(graph.num_nodes());
     for (size_t i = 0; i < _nodes.size(); i++) {
-        _nodes[i]._id = static_cast<NodeId>(i);
+        _nodes[i].id = static_cast<NodeId>(i);
     }
 
     for (auto const &edge: graph.edges()) {
@@ -25,30 +26,39 @@ DijkstraGraph::DijkstraGraph(Graph const &graph) : _calculation_finished(false) 
     }
 }
 
+DijkstraGraph::DijkstraGraph(const CoordinateGraph &coordinate_graph) : _calculation_finished(false) {
+    _nodes = std::vector<Node>(coordinate_graph.num_nodes());
+    for (size_t i = 0; i < _nodes.size(); i++) {
+        _nodes[i].id = static_cast<NodeId>(i);
+    }
+
+    for (auto const &edge: coordinate_graph.edges()) {
+        _nodes[edge.node_a.internal_id].neighbours.push_back(edge.node_b.internal_id);
+        _nodes[edge.node_a.internal_id].weights.push_back(edge.length());
+
+        _nodes[edge.node_b.internal_id].neighbours.push_back(edge.node_a.internal_id);
+        _nodes[edge.node_b.internal_id].weights.push_back(edge.length());
+    }
+}
+
 const DijkstraGraph::Node &DijkstraGraph::operator[](NodeId index) const {
     return _nodes[index];
 }
 
 void DijkstraGraph::dijkstras_algorithm(NodeId root_node_id) {
 
-    if (root_node_id >= _nodes.size()) {
-        throw std::invalid_argument("Root node not in graph.");
-    }
+    assert(root_node_id < _nodes.size() && "Root node must be in graph.");
 
     Node &root_node = _nodes[root_node_id];
 
     for (auto &node: _nodes) {
-        node.closest_terminal = -1;
-        node.distance_to_root = -1;
-        node.predecessor = -1;
+        node.closest_terminal = INVALID_NODE;
+        node.distance_to_root = INVALID_WEIGHT;
+        node.predecessor = INVALID_NODE;
     }
 
-    StandardHeap candidates = StandardHeap{};
+    StandardHeap candidates;
 //    FibonacciHeap candidates;
-    Heap &candidates_2 = candidates;
-    Heap *candidates_3 = new StandardHeap{};
-
-    delete candidates_3;
 
     candidates.insert(root_node_id, 0);
 
@@ -67,7 +77,7 @@ void DijkstraGraph::dijkstras_algorithm(NodeId root_node_id) {
 
             Node &node_w = _nodes[node_w_id];
 
-            if (node_w.distance_to_root == -1) {
+            if (node_w.distance_to_root == INVALID_WEIGHT) {
 
                 node_w.predecessor = node_v_id;
                 node_w.distance_to_root = node_v.distance_to_root + edge_weight;
@@ -80,7 +90,7 @@ void DijkstraGraph::dijkstras_algorithm(NodeId root_node_id) {
                 if (node_v_id == root_node_id) {
                     node_w.closest_terminal = node_w_id;
                 }
-                    // Otherwise w has the same closest Terminal as v, if not updated later.
+                    // Otherwise w has the same closest Node as v, if not updated later.
                 else {
                     node_w.closest_terminal = node_v.closest_terminal;
                 }
@@ -101,7 +111,7 @@ void DijkstraGraph::dijkstras_algorithm(NodeId root_node_id) {
                 if (node_v_id == root_node_id) {
                     node_w.closest_terminal = node_w_id;
                 }
-                    // Otherwise w has the same closest Terminal as v, if not updated later.
+                    // Otherwise w has the same closest Node as v, if not updated later.
                 else {
                     node_w.closest_terminal = node_v.closest_terminal;
                 }
@@ -116,9 +126,9 @@ void DijkstraGraph::dijkstras_algorithm(NodeId root_node_id) {
     std::vector<NodeId> terminals;
 
     for (auto const &node: _nodes) {
-        if (node.predecessor != -1) {
+        if (node.predecessor != INVALID_NODE) {
             WeightType edge_weight = node.distance_to_root - _nodes[node.predecessor].distance_to_root;
-            edges.emplace_back(static_cast<NodeId>(node._id), static_cast<NodeId>(node.predecessor),
+            edges.emplace_back(static_cast<NodeId>(node.id), static_cast<NodeId>(node.predecessor),
                                edge_weight);
         }
     }
@@ -138,6 +148,11 @@ NodeId DijkstraGraph::add_node(std::vector<NodeId> neighbours, std::vector<Weigh
 }
 
 bool DijkstraGraph::calculation_finished() const { return _calculation_finished; }
+
+NodeId DijkstraGraph::predecessor(NodeId node) const {
+    assert(calculation_finished());
+    return _nodes[node].predecessor;
+}
 
 
 

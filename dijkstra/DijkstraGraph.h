@@ -9,21 +9,23 @@
 #include <vector>
 #include "typedefs.h"
 #include "graph/Graph.h"
+#include "delaunay/DelaunayGraph.h"
 
 class DijkstraGraph {
 public:
 
     struct Node {
-        NodeId _id = -1;
+        NodeId id = INVALID_NODE;
         std::vector<NodeId> neighbours;
         std::vector<WeightType> weights;
-        NodeId predecessor = -1;
-        NodeId closest_terminal = -1;
-        WeightType distance_to_root = -1;
+        NodeId predecessor = INVALID_NODE;
+        NodeId closest_terminal = INVALID_NODE;
+        WeightType distance_to_root = INVALID_WEIGHT;
     };
 
 
     explicit DijkstraGraph(Graph const &graph);
+    explicit DijkstraGraph(CoordinateGraph const &coordinate_graph);
 
     Node &operator[](NodeId index);
 
@@ -36,6 +38,8 @@ public:
     [[maybe_unused]] Graph generate_output_graph();
 
     [[nodiscard]] bool calculation_finished() const;
+
+    [[nodiscard]] NodeId predecessor(NodeId node) const;
 
 private:
     std::vector<Node> _nodes;

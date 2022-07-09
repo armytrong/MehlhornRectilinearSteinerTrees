@@ -20,15 +20,19 @@ void DelaunayPriorityQueue::insert(const DelaunayPriorityQueue::Terminal &t, Gri
 
 std::optional<DelaunayPriorityQueue::Record> DelaunayPriorityQueue::find_inactivation_record
         (DelaunayPriorityQueue::Terminal t) const {
-    auto record = *_set.lower_bound({t, 0, INACTIVE});
-    return (record.terminal == t and record.status == INACTIVE) ? std::make_optional(record) : std::nullopt;
+    auto record = *_set.lower_bound({t, 0, ActiveInactive::INACTIVE});
+    if (record.terminal == t and record.status == ActiveInactive::INACTIVE) {
+        return std::make_optional(record);
+    } else {
+        return std::nullopt;
+    }
 }
 
 void DelaunayPriorityQueue::change_priority(const DelaunayPriorityQueue::Terminal &t, GridUnit new_trans) {
-    auto record = *_set.lower_bound({t, 0, INACTIVE});
-    assert(record.status == INACTIVE);
+    auto record = *_set.lower_bound({t, 0, ActiveInactive::INACTIVE});
+    assert(record.status == ActiveInactive::INACTIVE);
     _set.erase(record);
-    _set.insert({t, new_trans, INACTIVE});
+    _set.insert({t, new_trans, ActiveInactive::INACTIVE});
 }
 
 bool DelaunayPriorityQueue::empty() const {

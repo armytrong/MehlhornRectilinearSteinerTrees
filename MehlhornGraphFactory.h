@@ -2,20 +2,20 @@
 // Created by jgier on 20.06.2022.
 //
 
-#ifndef HAUPTAUFGABE_2_MEHLHORNDELAUNAYGRAPHFACTORY_H
-#define HAUPTAUFGABE_2_MEHLHORNDELAUNAYGRAPHFACTORY_H
+#ifndef HAUPTAUFGABE_2_MEHLHORNGRAPHFACTORY_H
+#define HAUPTAUFGABE_2_MEHLHORNGRAPHFACTORY_H
 
 
 #include "graph/Graph.h"
 #include "dijkstra/DijkstraGraph.h"
 
-class [[maybe_unused]] MehlhornDelaunayGraphFactory {
+class [[maybe_unused]] MehlhornGraphFactory {
 public:
 
 
-    [[maybe_unused]] static Graph create_delaunay_graph(Graph const &graph);
+    [[maybe_unused]] static Graph create_melhorn_graph(Graph const &graph);
 
-    static Graph create_delaunay_graph(DijkstraGraph const &dijkstra_graph, Graph const &graph);
+    static Graph create_melhorn_graph(DijkstraGraph const &dijkstra_graph, Graph const &graph);
 
 private:
     struct CandidateEdge {
@@ -36,4 +36,4 @@ private:
 };
 
 
-#endif //HAUPTAUFGABE_2_MEHLHORNDELAUNAYGRAPHFACTORY_H
+#endif //HAUPTAUFGABE_2_MEHLHORNGRAPHFACTORY_H

@@ -7,3 +7,7 @@
 bench_instances/
 /PostScript/test.ps
 /Output/
+/RSMT-ibm/
+*.stp
+*.ps
+!PostScript/template.ps

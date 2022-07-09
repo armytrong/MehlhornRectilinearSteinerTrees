@@ -10,75 +10,9 @@
 #include <iostream>
 #include "STPFileParser.h"
 
-constexpr char FILE_HEADER[] = "33D32945 STP File, STP Format Version 1.0";
 
-STPFileParser::STPFileParser(ArgumentHandler::Parms const &parms) : _filename(std::move(parms.input_filename)) {
-
-    _num_nodes = -1;
-
-    std::ifstream file(_filename);
-    if (not file and not _filename.empty()) {
-        throw std::invalid_argument("input file not found");
-    }
-    std::istream &input = _filename.empty() ? std::cin : file;
-
-    // skip the required number of instances in the input
-    std::string line;
-    safe_getline(input, line); // read the first line of the input
-    for (size_t i = 0; i < parms.instances_to_skip + 1; i++) {
-        while (line != FILE_HEADER and not input.eof()) {
-            safe_getline(input, line);
-            remove_carriage_return(line);
-        }
-        safe_getline(input, line);
-    }
-
-    if (input.eof()) {
-        throw std::invalid_argument("Invalid input format: No stp-instance found");
-    }
-
-    bool graph_found = false;
-    bool terminals_found = false;
-    bool coordinates_found = false;
-
-    while (line != "EOF") {
-        if (not safe_getline(input, line)) {
-            throw std::invalid_argument("Invalid input format: EOF expected");
-        }
-        if (line == "SECTION Graph" or line == "Section Graph") {
-            if (graph_found) {
-                throw std::invalid_argument("Invalid input format: Multiple graphs in input.");
-            } else {
-                read_graph_from_file(input);
-                graph_found = true;
-            }
-        } else if (line == "SECTION Terminals" or line == "Section Terminals") {
-            if (terminals_found) {
-                throw std::invalid_argument("Invalid input format: Multiple terminal sections in input.");
-            } else {
-                read_terminals_from_file(input);
-                terminals_found = true;
-            }
-        } else if (line == "SECTION Coordinates" or line == "Section Coordinates") {
-            if (coordinates_found) {
-                throw std::invalid_argument("Invalid input format: Multiple coordinate sections in input.");
-            }
-            if (parms.nodes_are_terminals) {
-                _num_terminals = _num_nodes;
-                _num_nodes = 10000 * 10000;
-                read_coordinates_from_file(input, true);
-            } else {
-                read_coordinates_from_file(input, false);
-            }
-            coordinates_found = true;
-        }
-    }
-
-    if (!graph_found) {
-        throw std::invalid_argument("Invalid input format: No graph in input.");
-    }
-
-}
+STPFileParser::STPFileParser(ArgumentHandler::Parms const &parms) :
+        _parms(parms), _num_nodes(-1), _num_terminals(-1) {}
 
 [[maybe_unused]] Graph STPFileParser::create_graph() {
     return {_num_nodes, _terminals, _edges};
@@ -198,5 +132,71 @@ inline std::istream &STPFileParser::safe_getline(std::istream &istream, std::str
     remove_carriage_return(string);
     return ret;
 }
+
+bool STPFileParser::read_next_instance(std::istream &istream) {
+    _num_nodes = -1;
+    _num_terminals = -1;
+    _terminals.clear();
+    _edges.clear();
+    _node_coords.clear();
+
+    // skip the required number of instances in the input
+    std::string line;
+    safe_getline(istream, line); // read the first line of the input
+    for (size_t i = 0; i < _parms.instances_to_skip + 1; i++) {
+        while (line != FILE_HEADER and not istream.eof()) {
+            safe_getline(istream, line);
+            remove_carriage_return(line);
+        }
+        safe_getline(istream, line);
+    }
+
+    if (istream.eof()) {
+        return false;
+    }
+
+    bool graph_found = false;
+    bool terminals_found = false;
+    bool coordinates_found = false;
+
+    while (line != "EOF") {
+        if (not safe_getline(istream, line)) {
+            throw std::invalid_argument("Invalid input format: EOF expected");
+        }
+        if (line == "SECTION Graph" or line == "Section Graph") {
+            if (graph_found) {
+                throw std::invalid_argument("Invalid input format: Multiple graphs in input.");
+            } else {
+                read_graph_from_file(istream);
+                graph_found = true;
+            }
+        } else if (line == "SECTION Terminals" or line == "Section Terminals") {
+            if (terminals_found) {
+                throw std::invalid_argument("Invalid input format: Multiple terminal sections in input.");
+            } else {
+                read_terminals_from_file(istream);
+                terminals_found = true;
+            }
+        } else if (line == "SECTION Coordinates" or line == "Section Coordinates") {
+            if (coordinates_found) {
+                throw std::invalid_argument("Invalid input format: Multiple coordinate sections in input.");
+            }
+            if (_parms.nodes_are_terminals) {
+                _num_terminals = _num_nodes;
+                _num_nodes = 10000 * 10000;
+                read_coordinates_from_file(istream, true);
+            } else {
+                read_coordinates_from_file(istream, false);
+            }
+            coordinates_found = true;
+        }
+    }
+
+    if (!graph_found) {
+        throw std::invalid_argument("Invalid input format: No graph in input.");
+    }
+    return true;
+}
+
 
 

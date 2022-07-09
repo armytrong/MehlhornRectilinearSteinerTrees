@@ -14,11 +14,16 @@
 
 class STPFileParser {
 public:
+    static constexpr char FILE_HEADER[] = "33D32945 STP File, STP Format Version 1.0";
+
     explicit STPFileParser(ArgumentHandler::Parms const &parms);
+
+    bool read_next_instance(std::istream &istream);
 
     [[maybe_unused]] Graph create_graph();
 
     DelaunayGraph create_delaunay_graph();
+
 
 private:
 
@@ -32,12 +37,13 @@ private:
 
     static std::istream &safe_getline(std::istream &istream, std::string &string);
 
-    std::string _filename;
+    ArgumentHandler::Parms const &_parms;
     NodeId _num_nodes;
     NodeId _num_terminals;
     std::vector<NodeId> _terminals;
     std::vector<Graph::Edge> _edges;
     std::vector<Coord> _node_coords;
+
 };
 
 

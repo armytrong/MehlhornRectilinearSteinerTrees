@@ -16,6 +16,7 @@ ArgumentHandler::ArgumentHandler(int argc, char **argv) : _parms{
         0,
         false,
         false,
+        true,
         true
 } {
     for (int i = 1; i < argc; i++) {
@@ -47,6 +48,8 @@ ArgumentHandler::ArgumentHandler(int argc, char **argv) : _parms{
             if (i < argc) {
                 _parms.instances_to_skip = std::stoi(argv[i]);
             }
+        } else if (arg == "--silent") {
+            _parms.output = false;
         } else if (arg[0] == '-') {
             std::cerr << argv[0] << ": " << arg << ": invalid option" << std::endl;
             print_usage(std::cerr, argv[0]);

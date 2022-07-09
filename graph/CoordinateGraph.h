@@ -41,6 +41,7 @@ public:
 
     [[maybe_unused]] [[nodiscard]] Graph export_graph() const;
     [[maybe_unused]] void print_as_postscript(std::ostream &os, const std::string &base_file_name);
+    void print_as_stp(std::ostream &os);
 
     [[nodiscard]] NodeId num_nodes() const;
     [[nodiscard]] NodeId num_terminals() const;

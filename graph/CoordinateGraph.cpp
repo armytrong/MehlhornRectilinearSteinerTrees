@@ -4,6 +4,7 @@
 
 #include "CoordinateGraph.h"
 #include "kruskal/disjoint_set_2.h"
+#include "STPFileParser.h"
 #include <fstream>
 #include <valarray>
 #include <cassert>
@@ -48,32 +49,32 @@ void CoordinateGraph::print_as_postscript(std::ostream &os, const std::string &b
 
     auto grid_width = static_cast<GridUnit>(std::sqrt(std::max(_orig_max_x, _orig_max_y)));
 
-    os << std::endl;
-    os << "%%BeginSetup" << std::endl << std::endl;
+    os << "\n";
+    os << "%%BeginSetup" << "\n" << "\n";
     os << 0 << " " << (grid_width + 1) * (grid_width + 1) << " " << 0 << " " << (grid_width + 1) * (grid_width + 1)
-       << " SetAxes" << std::endl << std::endl;
+       << " SetAxes" << "\n" << "\n";
 
-    os << num_terminals() << " DefineTerminals" << std::endl;
+    os << num_terminals() << " DefineTerminals" << "\n";
     for (auto terminal: _nodes) {
         if (is_terminal_id(terminal.internal_id)) {
-            os << "\t" << terminal.x_coord + 1 << "\t" << terminal.y_coord + 1 << "\tDT" << std::endl;
+            os << "\t" << terminal.x_coord + 1 << "\t" << terminal.y_coord + 1 << "\tDT" << "\n";
         }
     }
 
-    os << std::endl << "%%EndSetup" << std::endl << std::endl;
+    os << "\n" << "%%EndSetup" << "\n" << "\n";
 
-    os << "%%Page: 1 1" << std::endl;
-    os << "BeginPlot" << std::endl;
-    os << "\tPlot_Terminals" << std::endl;
+    os << "%%Page: 1 1" << "\n";
+    os << "BeginPlot" << "\n";
+    os << "\tPlot_Terminals" << "\n";
     for (auto const &edge: _edges) {
         os << "\t" << edge.node_a.x_coord + 1
            << "\t" << edge.node_a.y_coord + 1
            << "\t" << edge.node_b.x_coord + 1
-           << "\t" << edge.node_b.y_coord + 1 << "\tS" << std::endl;
+           << "\t" << edge.node_b.y_coord + 1 << "\tS" << "\n";
     }
 
     //os << "  (Steiner Minimal Tree: " << _terminals.size() << "points, length=" << grid_width * grid_widht << ")" <<
-    //std::endl;
+    //"\n";
     os << "EndPlot" << std::endl;
 }
 
@@ -213,8 +214,8 @@ GridUnit CoordinateGraph::mid(GridUnit a, GridUnit b, GridUnit c) {
 
 void CoordinateGraph::reduce_nodes() {
     NodeId orig_num_nodes = num_nodes();
-    std::vector<NodeId> new_node_id(num_nodes(), -1);
-    std::iota(new_node_id.begin(), new_node_id.begin() + num_terminals() - 1, 0);
+    std::vector<NodeId> new_node_id(orig_num_nodes, -1);
+    std::iota(new_node_id.begin(), new_node_id.begin() + num_terminals(), 0);
     NodeId node_id_counter = num_terminals();
     for (auto &edge: _edges) {
         if (new_node_id[edge.node_a.internal_id] == -1) {
@@ -235,6 +236,41 @@ void CoordinateGraph::reduce_nodes() {
             new_nodes[new_node_id[i]] = {old_node.x_coord, old_node.y_coord, new_node_id[i]};
         }
     }
+    _nodes = new_nodes;
+}
+
+void CoordinateGraph::print_as_stp(std::ostream &outstream) {
+    outstream << STPFileParser::FILE_HEADER << "\n";
+    outstream << "\n";
+
+    outstream << "SECTION Graph" << "\n";
+    outstream << "Nodes " << num_nodes() << "\n";
+    outstream << "Edges " << _edges.size() << "\n";
+    for (auto const &edge: _edges) {
+        outstream << "E " << edge.node_a.internal_id + 1
+                  << " " << edge.node_b.internal_id + 1
+                  << " " << edge.length() << "\n";
+    }
+    outstream << "END" << "\n";
+    outstream << "\n";
+
+    outstream << "SECTION Terminals" << "\n";
+    outstream << "Terminals " << num_terminals() << "\n";
+    for (int t = 0; t < num_terminals(); t++) {
+        outstream << "T " << t + 1 << "\n";
+    }
+    outstream << "END" << "\n";
+    outstream << "\n";
+
+    outstream << "SECTION Coordinates" << "\n";
+    for (auto const &node: _nodes) {
+        outstream << "DD " << node.internal_id + 1
+                  << " " << node.x_coord
+                  << " " << node.y_coord << "\n";
+    }
+    outstream << "END" << "\n" << "\n";
+
+    outstream << "EOF" << std::endl;
 }
 
 

@@ -7,33 +7,43 @@
 
 #include <iostream>
 #include <vector>
-#include "../graph/Graph.h"
+#include "typedefs.h"
+#include "graph/Graph.h"
+#include "delaunay/DelaunayGraph.h"
 
 class DijkstraGraph {
 public:
-    using NodeId = int;
-    using WeightVal = int;
 
     struct Node {
-        NodeId _id = -1;
+        NodeId id = INVALID_NODE;
         std::vector<NodeId> neighbours;
-        std::vector<WeightVal> weights;
-        NodeId predecessor = -1;
-        NodeId closest_terminal = -1;
-        WeightVal distance_to_root = -1;
-        bool included = false;
+        std::vector<WeightType> weights;
+        NodeId predecessor = INVALID_NODE;
+        NodeId closest_terminal = INVALID_NODE;
+        WeightType distance_to_root = INVALID_WEIGHT;
     };
 
-    explicit DijkstraGraph(Graph const &graph);
 
-    Node &operator[](NodeId index) {
-        return _nodes[index];
-    }
+    explicit DijkstraGraph(Graph const &graph);
+    explicit DijkstraGraph(CoordinateGraph const &coordinate_graph);
+
+    Node &operator[](NodeId index);
+
+    Node const &operator[](NodeId index) const;
 
     void dijkstras_algorithm(NodeId root_node_id);
 
+    NodeId add_node(std::vector<NodeId> neighbours, std::vector<WeightType> weights);
+
+    [[maybe_unused]] Graph generate_output_graph();
+
+    [[nodiscard]] bool calculation_finished() const;
+
+    [[nodiscard]] NodeId predecessor(NodeId node) const;
+
 private:
     std::vector<Node> _nodes;
+    bool _calculation_finished;
 };
 
 

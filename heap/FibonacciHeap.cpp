@@ -4,7 +4,6 @@
 
 #include <stack>
 #include <stdexcept>
-#include <cassert>
 #include "FibonacciHeap.h"
 
 FibonacciHeap::Node::Node(int item_id, int key) {
@@ -36,7 +35,7 @@ void FibonacciHeap::insert(int item_id, int key) {
     }
 }
 
-void FibonacciHeap::plant(Node *v) {
+void FibonacciHeap::plant(Node *v) { // NOLINT(misc-no-recursion)
     v->is_binomial = true;
 
     if (_roots.size() < v->childs.size() + 1) {
@@ -69,10 +68,8 @@ int FibonacciHeap::extract_min() {
             throw std::out_of_range("Heap is empty.");
         }
     }
-    for (size_t i = 0; i < _roots.size(); i++) {
+    for (int i = 0; i < _roots.size(); i++) {
         if (_roots[i] != nullptr) {
-            assert(_roots[i]->key >= 0 && _roots[i]->key <= 100);
-            assert(_roots[min_index]->key >= 0 && _roots[i]->key <= 100);
             if (_roots[i]->key < _roots[min_index]->key) {
                 min_index = i;
             }
@@ -89,7 +86,7 @@ int FibonacciHeap::extract_min() {
 
 int FibonacciHeap::find_min() const {
     int min_index = 0;
-    for (size_t i = 0; i < _roots.size(); i++) {
+    for (int i = 0; i < _roots.size(); i++) {
         if (_roots[i] != nullptr && _roots[i]->key < _roots[min_index]->key) {
             min_index = i;
         }
@@ -124,11 +121,10 @@ void FibonacciHeap::decrease_key(int item_id, int new_key) {
 }
 
 bool FibonacciHeap::empty() const {
-    for (Node *n: _roots) {
-        if (n != nullptr)
-            return false;
+    if (std::all_of(_roots.begin(), _roots.end(), [](Node *n) { return n == nullptr; })) {
+        return true;
     }
-    return true;
+    return false;
 }
 
 FibonacciHeap::~FibonacciHeap() {

@@ -1,4 +1,13 @@
 /cmake-build-debug/
+/build/
 /4_filtered/
 /.vscode/
 /.idea/
+13_hard/
+bench_instances/
+/PostScript/test.ps
+/Output/
+/RSMT-ibm/
+*.stp
+*.ps
+!PostScript/template.ps

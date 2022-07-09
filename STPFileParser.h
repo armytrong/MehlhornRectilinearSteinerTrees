@@ -8,26 +8,42 @@
 
 #include <string>
 #include "graph/Graph.h"
+#include "delaunay/DelaunayGraph.h"
+#include "ArgumentHandler.h"
+
 
 class STPFileParser {
 public:
-    explicit STPFileParser(std::string filename);
+    static constexpr char FILE_HEADER[] = "33D32945 STP File, STP Format Version 1.0";
 
-    Graph create_graph();
+    explicit STPFileParser(ArgumentHandler::Parms const &parms);
+
+    bool read_next_instance(std::istream &istream);
+
+    [[maybe_unused]] Graph create_graph();
+
+    DelaunayGraph create_delaunay_graph();
+
 
 private:
-    static bool check_file_header(std::ifstream &file);
-
-    [[nodiscard]] std::ifstream open_input_file() const;
 
     void read_graph_from_file(std::istream &file);
 
     void read_terminals_from_file(std::istream &file);
 
-    std::string _filename;
-    Graph::NodeId _num_nodes;
-    std::vector<Graph::NodeId> _terminals;
+    void read_coordinates_from_file(std::istream &file, bool nodes_are_terminals);
+
+    static void remove_carriage_return(std::string &s);
+
+    static std::istream &safe_getline(std::istream &istream, std::string &string);
+
+    ArgumentHandler::Parms const &_parms;
+    NodeId _num_nodes;
+    NodeId _num_terminals;
+    std::vector<NodeId> _terminals;
     std::vector<Graph::Edge> _edges;
+    std::vector<Coord> _node_coords;
+
 };
 
 

@@ -3,7 +3,7 @@ project(Hauptaufgabe_2)
 
 set(CMAKE_CXX_STANDARD 20)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=undefined -fsanitize=address -g")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=undefined -fsanitize=address -g")
 
 include_directories(.)
 
@@ -34,4 +34,4 @@ add_executable(Hauptaufgabe_2
         delaunay/DelaunayPriorityQueue.cpp
         delaunay/DelaunayPriorityQueue.h
         ArgumentHandler.cpp
-        ArgumentHandler.h mehlhorn/MehlhornGraph.cpp mehlhorn/MehlhornGraph.h graph/CoordinateGraph.cpp graph/CoordinateGraph.h mehlhorn/mehlhorn.cpp mehlhorn/mehlhorn.h)
+        ArgumentHandler.h mehlhorn/MehlhornGraph.cpp mehlhorn/MehlhornGraph.h graph/CoordinateGraph.cpp graph/CoordinateGraph.h)

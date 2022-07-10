@@ -62,7 +62,7 @@ void MehlhornGraph::calculate_mehlhorn_graph() {
 
 void MehlhornGraph::add_path_to_edge(
         DijkstraGraph const &dijkstra_graph,
-        DelaunayGraph::Edge const &edge,
+        CoordinateGraph::Edge const &edge,
         MehlhornGraph::Edge &candidate_edge) const {
     std::vector<NodeId> &path_to_node_a = candidate_edge.path;
     NodeId node_i = edge.node_a.internal_id;

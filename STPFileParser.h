@@ -7,7 +7,7 @@
 
 
 #include <string>
-#include "delaunay/DelaunayGraph.h"
+#include "graph/CoordinateGraph.h"
 #include "ArgumentHandler.h"
 
 
@@ -19,7 +19,7 @@ public:
 
     bool read_next_instance(std::istream &istream);
 
-    DelaunayGraph create_delaunay_graph();
+    CoordinateGraph create_coordinate_graph();
 
 
 private:

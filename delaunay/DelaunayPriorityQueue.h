@@ -7,7 +7,7 @@
 
 
 #include <set>
-#include "DelaunayGraph.h"
+#include "graph/CoordinateGraph.h"
 
 enum class ActiveInactive {
     INACTIVE, ACTIVE
@@ -19,7 +19,7 @@ public:
     DelaunayPriorityQueue(GridUnit max_x, GridUnit max_y) : MINIMUM_RECORD(
             {{-max_x - 1, -max_y - 1}, -max_x - max_y - 1, ActiveInactive::INACTIVE}) {}
 
-    using Terminal = DelaunayGraph::Node;
+    using Terminal = CoordinateGraph::Node;
     struct Record {
         Terminal terminal;
         GridUnit trans;

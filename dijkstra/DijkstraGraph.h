@@ -8,7 +8,7 @@
 #include <iostream>
 #include <vector>
 #include "typedefs.h"
-#include "delaunay/DelaunayGraph.h"
+#include "graph/CoordinateGraph.h"
 
 class DijkstraGraph {
 public:

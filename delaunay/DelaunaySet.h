@@ -5,12 +5,12 @@
 #ifndef HAUPTAUFGABE_2_DELAUNAYSET_H
 #define HAUPTAUFGABE_2_DELAUNAYSET_H
 
-#include "DelaunayGraph.h"
+#include "graph/CoordinateGraph.h"
 #include <set>
 
 class DelaunaySet {
 public:
-    using Node = DelaunayGraph::Node;
+    using Node = CoordinateGraph::Node;
 
     void insert(Node const &node);
     void erase(Node const &node);

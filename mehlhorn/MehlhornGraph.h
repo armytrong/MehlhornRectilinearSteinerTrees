@@ -5,8 +5,7 @@
 #ifndef HAUPTAUFGABE_2_MEHLHORNGRAPH_H
 #define HAUPTAUFGABE_2_MEHLHORNGRAPH_H
 
-
-#include "delaunay/DelaunayGraph.h"
+#include "graph/CoordinateGraph.h"
 #include "dijkstra/DijkstraGraph.h"
 
 class MehlhornGraph {
@@ -43,7 +42,8 @@ private:
     CoordinateGraph const &_coordinate_graph;
     std::vector<Edge> _mehlhorn_edges;
     void
-    add_path_to_edge(const DijkstraGraph &dijkstra_graph, const DelaunayGraph::Edge &edge, Edge &candidate_edge) const;
+    add_path_to_edge(const DijkstraGraph &dijkstra_graph, const CoordinateGraph::Edge &edge, Edge &candidate_edge)
+    const;
 };
 
 

@@ -255,6 +255,46 @@ void CoordinateGraph::print_as_stp(std::ostream &outstream) {
     outstream << "EOF" << std::endl;
 }
 
+GridUnit CoordinateGraph::max_y() const { return _max_y; }
+
+GridUnit CoordinateGraph::max_x() const { return _max_x; }
+
+void CoordinateGraph::translate_from_1_to_infty_norm() {
+    for (auto &terminal: _nodes) {
+        translate_terminal_from_1_to_infty_norm(terminal);
+        _max_x = std::max(std::abs(terminal.x_coord), _max_x);
+        _max_y = std::max(std::abs(terminal.y_coord), _max_y);
+    }
+    for (auto &edge: _edges) {
+        translate_terminal_from_1_to_infty_norm(edge.node_a);
+        translate_terminal_from_1_to_infty_norm(edge.node_b);
+    }
+}
+
+void CoordinateGraph::translate_from_infty_to_1_norm() {
+    for (auto &terminal: _nodes) {
+        translate_terminal_from_infty_to_1_norm(terminal);
+    }
+    for (auto &edge: _edges) {
+        translate_terminal_from_infty_to_1_norm(edge.node_a);
+        translate_terminal_from_infty_to_1_norm(edge.node_b);
+    }
+}
+
+void CoordinateGraph::translate_terminal_from_1_to_infty_norm(CoordinateGraph::Node &t) {
+    GridUnit new_x = t.x_coord + t.y_coord;
+    GridUnit new_y = t.x_coord - t.y_coord;
+    t.x_coord = new_x;
+    t.y_coord = new_y;
+}
+
+void CoordinateGraph::translate_terminal_from_infty_to_1_norm(CoordinateGraph::Node &t) {
+    GridUnit new_x = (t.x_coord + t.y_coord) / 2;
+    GridUnit new_y = t.x_coord - new_x;
+    t.x_coord = new_x;
+    t.y_coord = new_y;
+}
+
 
 bool CoordinateGraph::Node::operator==(const CoordinateGraph::Node &other) const {
     return x_coord == other.x_coord and y_coord == other.y_coord;

@@ -92,20 +92,20 @@ inline void STPFileParser::remove_carriage_return(std::string &s) {
     }
 }
 
-DelaunayGraph STPFileParser::create_delaunay_graph() {
-    DelaunayGraph delaunay_graph;
+CoordinateGraph STPFileParser::create_coordinate_graph() {
+    CoordinateGraph coordinate_graph;
     auto sqrt = static_cast<GridUnit>(std::sqrt(_num_nodes));
     if (_node_coords.empty()) {
         assert(sqrt * sqrt == _num_nodes);
     }
     for (auto terminal_id: _terminals) {
         if (_node_coords.empty()) {
-            delaunay_graph.add_terminal(terminal_id % sqrt, static_cast<GridUnit>(terminal_id / sqrt));
+            coordinate_graph.add_terminal(terminal_id % sqrt, static_cast<GridUnit>(terminal_id / sqrt));
         } else {
-            delaunay_graph.add_terminal(_node_coords[terminal_id].x, _node_coords[terminal_id].y);
+            coordinate_graph.add_terminal(_node_coords[terminal_id].x, _node_coords[terminal_id].y);
         }
     }
-    return delaunay_graph;
+    return coordinate_graph;
 }
 
 inline std::istream &STPFileParser::safe_getline(std::istream &istream, std::string &string) {

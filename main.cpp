@@ -2,6 +2,7 @@
 #include "STPFileParser.h"
 #include "ArgumentHandler.h"
 #include "mehlhorn/MehlhornGraph.h"
+#include "delaunay/DelaunayCalculator.h"
 
 int main(int argc, char *argv[]) {
     ArgumentHandler argument_handler(argc, argv);
@@ -44,14 +45,14 @@ int main(int argc, char *argv[]) {
     while (instance_found) {
 
         print_verbose("Starting Calculation of instance " + std::to_string(instance_counter));
-        auto delaunay_graph = parser.create_delaunay_graph();
+        auto delaunay_graph = parser.create_coordinate_graph();
 
-        delaunay_graph.calculate_l1_delaunay_triangulation();
-        delaunay_graph.add_steiner_points();
-        delaunay_graph.calculate_l1_delaunay_triangulation();
+        auto delaunay_triangulation_1 = DelaunayCalculator::l1_delaunay_triangulation(delaunay_graph);
+        DelaunayCalculator::add_steiner_points(delaunay_triangulation_1);
+        auto delaunay_triangulation_2 = DelaunayCalculator::l1_delaunay_triangulation(delaunay_triangulation_1);
         print_verbose("Delaunay triangulation complete");
 
-        MehlhornGraph mehlhorn_graph(delaunay_graph);
+        MehlhornGraph mehlhorn_graph(delaunay_triangulation_2);
         mehlhorn_graph.calculate_mehlhorn_graph();
         print_verbose("Mehlhorn Graph calculated");
         mehlhorn_graph.kruskal_on_mehlhorn_edges();

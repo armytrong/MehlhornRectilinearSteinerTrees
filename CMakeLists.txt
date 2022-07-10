@@ -18,11 +18,15 @@ add_executable(Hauptaufgabe_2
         heap/StandardHeap.cpp
         heap/StandardHeap.h
         heap/PriorityQueue.h
-        delaunay/DelaunayGraph.cpp
-        delaunay/DelaunayGraph.h
         delaunay/DelaunaySet.cpp
         delaunay/DelaunaySet.h
         delaunay/DelaunayPriorityQueue.cpp
         delaunay/DelaunayPriorityQueue.h
         ArgumentHandler.cpp
-        ArgumentHandler.h mehlhorn/MehlhornGraph.cpp mehlhorn/MehlhornGraph.h graph/CoordinateGraph.cpp graph/CoordinateGraph.h)
+        ArgumentHandler.h mehlhorn/MehlhornGraph.cpp
+        mehlhorn/MehlhornGraph.h
+        graph/CoordinateGraph.cpp
+        graph/CoordinateGraph.h
+        delaunay/DelaunayCalculator.cpp
+        delaunay/DelaunayCalculator.h
+        )

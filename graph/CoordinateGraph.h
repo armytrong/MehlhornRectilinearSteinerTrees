@@ -44,6 +44,8 @@ public:
     [[nodiscard]] NodeId num_nodes() const;
     [[nodiscard]] NodeId num_terminals() const;
     [[nodiscard]] EdgeId num_edges() const;
+    [[nodiscard]] GridUnit max_x() const;
+    [[nodiscard]] GridUnit max_y() const;
     [[nodiscard]] std::vector<Node> const &nodes() const;
     [[nodiscard]] std::vector<Edge> const &edges() const;
 
@@ -53,11 +55,20 @@ public:
     void add_terminal(GridUnit x_coord, GridUnit y_coord);
     void add_edge(Node node_a, Node node_b);
 
+    void translate_from_1_to_infty_norm();
+    void translate_from_infty_to_1_norm();
+
     void kruskal();
     void l_shape_flipping();
     void reduce_nodes();
-protected:
+
     static GridUnit mid(GridUnit a, GridUnit b, GridUnit c);
+protected:
+
+    static void translate_terminal_from_1_to_infty_norm(Node &t);
+
+
+    static void translate_terminal_from_infty_to_1_norm(Node &t);
 
     std::vector<Node> _nodes;
     std::vector<Edge> _edges;

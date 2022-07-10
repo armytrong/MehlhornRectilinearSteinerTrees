@@ -8,9 +8,9 @@
 
 #include <list>
 #include <vector>
-#include "Heap.h"
+#include "PriorityQueue.h"
 
-class [[maybe_unused]] FibonacciHeap : public Heap {
+class [[maybe_unused]] FibonacciHeap : public PriorityQueue {
 private:
     struct Node {
         Node(int item_id, int key);

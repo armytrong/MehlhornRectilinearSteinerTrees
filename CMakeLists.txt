@@ -4,7 +4,7 @@ project(Hauptaufgabe_2)
 set(CMAKE_CXX_STANDARD 20)
 
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=undefined -fsanitize=address -g")
-
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -o3")
 include_directories(.)
 
 add_executable(Hauptaufgabe_2
@@ -17,9 +17,7 @@ add_executable(Hauptaufgabe_2
         typedefs.h
         heap/StandardHeap.cpp
         heap/StandardHeap.h
-        heap/BinaryHeap.cpp
-        heap/BinaryHeap.h
-        heap/Heap.h
+        heap/PriorityQueue.h
         delaunay/DelaunayGraph.cpp
         delaunay/DelaunayGraph.h
         delaunay/DelaunaySet.cpp

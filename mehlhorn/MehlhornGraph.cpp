@@ -3,7 +3,6 @@
 //
 
 #include <numeric>
-#include <cassert>
 #include <optional>
 #include "MehlhornGraph.h"
 #include "dijkstra/DijkstraGraph.h"

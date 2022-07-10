@@ -25,8 +25,6 @@ public:
 
     DelaunayGraph() : super() {}
 
-    explicit DelaunayGraph(std::vector<Node> nodes, NodeId num_terminals) : super(std::move(nodes), num_terminals) {}
-
 
     void calculate_l1_delaunay_triangulation();
     void translate_from_1_to_infty_norm();

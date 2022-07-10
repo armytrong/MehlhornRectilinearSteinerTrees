@@ -2,11 +2,11 @@
 // Created by jgier on 27.06.2022.
 //
 
-#ifndef HAUPTAUFGABE_2_HEAP_H
-#define HAUPTAUFGABE_2_HEAP_H
+#ifndef HAUPTAUFGABE_2_PRIORITYQUEUE_H
+#define HAUPTAUFGABE_2_PRIORITYQUEUE_H
 
 
-class Heap {
+class PriorityQueue {
 public:
     using IdType = int;
     using KeyType = int;
@@ -19,8 +19,8 @@ public:
 
     [[nodiscard]] virtual bool empty() const = 0;
 
-    virtual ~Heap() = default;
+    virtual ~PriorityQueue() = default;
 };
 
 
-#endif //HAUPTAUFGABE_2_HEAP_H
+#endif //HAUPTAUFGABE_2_PRIORITYQUEUE_H

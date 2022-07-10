@@ -14,7 +14,6 @@ class DijkstraGraph {
 public:
 
     struct Node {
-        NodeId id = INVALID_NODE;
         std::vector<NodeId> neighbours;
         std::vector<WeightType> weights;
         NodeId predecessor = INVALID_NODE;

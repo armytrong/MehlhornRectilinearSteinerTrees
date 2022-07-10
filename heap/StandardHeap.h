@@ -7,9 +7,9 @@
 
 
 #include <vector>
-#include "Heap.h"
+#include "PriorityQueue.h"
 
-class StandardHeap : public Heap {
+class StandardHeap : public PriorityQueue {
 private:
     struct Node {
         int item_id, key;

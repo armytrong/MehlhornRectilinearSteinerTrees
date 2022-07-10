@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
 
 
     STPFileParser parser(parms);
-    bool instance_found = false;
+    bool instance_found;
     try {
         instance_found = parser.read_next_instance(istream);
         print_verbose("input parsed");

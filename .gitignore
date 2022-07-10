@@ -11,3 +11,5 @@ bench_instances/
 *.stp
 *.ps
 !PostScript/template.ps
+/cmake-build-release/
+/cmake-build-release-coverage/

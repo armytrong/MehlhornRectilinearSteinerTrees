@@ -2,8 +2,6 @@
 // Created by jgier on 29.04.2022.
 //
 
-#include <fstream>
-#include <utility>
 #include <sstream>
 #include <cmath>
 #include <cassert>
@@ -18,7 +16,6 @@ void STPFileParser::read_graph_from_file(std::istream &file) {
     std::string line;
     std::string specifier;
     int val_1, val_2, val_3;
-    int num_edges = 0;
 
     while (line != "END" and line != "End") {
         if (!safe_getline(file, line) or line == "EOF" or line == "EOF\r") {
@@ -29,7 +26,6 @@ void STPFileParser::read_graph_from_file(std::istream &file) {
         if (specifier == "Nodes") {
             _num_nodes = val_1;
         } else if (specifier == "Edges") {
-            num_edges = val_1;
         } else if (specifier == "E") {
         }
     }
@@ -76,7 +72,6 @@ void STPFileParser::read_coordinates_from_file(std::istream &file, bool nodes_ar
         }
 
         if (specifier == "DD") {
-            // TODO where do the coordiantes begin, at 0,0 or 1,1?
             if (nodes_are_terminals) {
                 _terminals.push_back((y_coord /* -1 */) * 10000 + x_coord /* -1 */ );
             } else {

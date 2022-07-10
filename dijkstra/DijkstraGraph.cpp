@@ -2,7 +2,6 @@
 // Created by jgier on 29.04.2022.
 //
 
-#include <ranges>
 #include <utility>
 #include "DijkstraGraph.h"
 #include "../heap/FibonacciHeap.h"
@@ -13,9 +12,6 @@
 
 DijkstraGraph::DijkstraGraph(const CoordinateGraph &coordinate_graph) : _calculation_finished(false) {
     _nodes = std::vector<Node>(coordinate_graph.num_nodes());
-    for (size_t i = 0; i < _nodes.size(); i++) {
-        _nodes[i].id = static_cast<NodeId>(i);
-    }
 
     for (auto const &edge: coordinate_graph.edges()) {
         _nodes[edge.node_a.internal_id].neighbours.push_back(edge.node_b.internal_id);
@@ -112,7 +108,7 @@ DijkstraGraph::Node &DijkstraGraph::operator[](NodeId index) {
 
 NodeId DijkstraGraph::add_node(std::vector<NodeId> neighbours, std::vector<WeightType> weights) {
     auto id = static_cast<NodeId>(_nodes.size());
-    _nodes.push_back({id, std::move(neighbours), std::move(weights)});
+    _nodes.push_back({std::move(neighbours), std::move(weights)});
     _calculation_finished = false;
     return id;
 }
